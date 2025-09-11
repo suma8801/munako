@@ -51,11 +51,11 @@ return function (RouteBuilder $routes): void {
 
     $routes->scope('/', function (RouteBuilder $builder): void {
         /*
-         * Here, we are connecting '/' (base path) to a controller called 'Pages',
-         * its action called 'display', and we pass a param to select the view file
-         * to use (in this case, templates/Pages/home.php)...
+         * ホーム
+         * ここでは、 / にアクセスしたときに、HomesControllerのindexアクションを呼び出す
+         * ビューは templates/Homes/index.php を使用する
          */
-       $builder->connect('/', ['controller' => 'Homes', 'action' => 'regacy', 'regacy']);
+       $builder->connect('/', ['controller' => 'Homes', 'action' => 'index', 'index']);
 
         /*
          * ...and connect the rest of 'Pages' controller's URLs.

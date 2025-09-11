@@ -1,15 +1,13 @@
 <?php
 /**
- * サクセスエモーション向け占いサイト
+ * 宗像高校同窓会
  *
- * @copyright     Copyright (c) semotion
+ * @copyright     Copyright (c) ymatsu
  * @link          
- * @since         2025/08/27
+ * @since         2025/09/11
  * @license       
  * @var \App\View\AppView $this
  */
-
-$description = '天命タロット鑑定';
 ?>
 <!DOCTYPE html>
 <html>
