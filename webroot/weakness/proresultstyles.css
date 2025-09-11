@@ -1,0 +1,265 @@
+/*PCの場合*/
+.pc { display:inline!important; }
+.mb { display:none!important; }
+
+@media screen and (max-width: 768px) {
+/*タブレット、スマホの場合*/
+.pc { display:none!important; }
+.mb { display:inline!important; }
+}
+
+body {
+  font-family: '游明朝 Medium', serif;
+  text-align: center;
+  font-size: 1em;
+  line-height: 25px;
+  background-image: url(image/probg01.jpg);
+  background-size: cover;
+  overflow: hidden scroll;
+  height: 100%;
+  color: white;
+}
+
+
+
+.result-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.result-row {
+  display: flex;
+  width: 640px;
+  justify-content: center;
+  align-items: center;
+  margin: auto;  /* 追加 */
+}
+
+#destiny-image {
+  max-width: 30%; /* またはお好みの幅 */
+  margin-right: 20px; /* 画像とテキストの間のスペース */
+}
+#talent-image {
+  max-width: 30%; /* またはお好みの幅 */
+  margin-right: 20px; /* 画像とテキストの間のスペース */
+}
+#weakness-image {
+  max-width: 30%; /* またはお好みの幅 */
+  margin-right: 20px; /* 画像とテキストの間のスペース */
+}
+#second-weakness-image {
+  max-width: 30%; /* またはお好みの幅 */
+  margin-right: 20px; /* 画像とテキストの間のスペース */
+}
+
+#destiny-short-text {
+  flex: 1;
+}
+#talent-short-text {
+  flex: 1;
+}
+#weakness-short-text {
+  flex: 1;
+}
+#second-weakness-short-text {
+  flex: 1;
+}
+
+#destiny-long-text {
+  flex: 1;
+  width: 640px;
+  text-align: left; /* テキストを左寄せ */
+  padding-top: 20px;
+  margin:2em 0;
+    position: relative;
+    padding: 0.25em 1em;
+    border: solid 2px #f6a139;
+    border-radius: 3px 0 3px 0;
+}
+#talent-long-text {
+  flex: 1;
+  width: 640px;
+  text-align: left; /* テキストを左寄せ */
+  padding-top: 20px;
+  margin:2em 0;
+    position: relative;
+    padding: 0.25em 1em;
+    border: solid 2px #f6a139;
+    border-radius: 3px 0 3px 0;
+}
+#weakness-long-text {
+  flex: 1;
+  width: 640px;
+  text-align: left; /* テキストを左寄せ */
+  padding-top: 20px;
+  margin:2em 0;
+    position: relative;
+    padding: 0.25em 1em;
+    border: solid 2px #f6a139;
+    border-radius: 3px 0 3px 0;
+}
+#second-weakness-long-text {
+  flex: 1;
+  width: 640px;
+  text-align: center; /* テキストを中央寄せに変更 */
+  padding-top: 20px;
+  margin: auto; /* 中央寄せのための変更 */
+  position: relative;
+  padding: 0.25em 1em;
+  border: solid 2px #f6a139;
+  border-radius: 3px 0 3px 0;
+}
+
+#destiny-long-text:before,#destiny-long-text:after
+{
+    content: '';
+    position: absolute;
+    width:10px;
+    height: 10px;
+    border: solid 2px #f6a139;
+    border-radius: 50%;
+}
+#destiny-long-text:after {
+    top:-12px;
+    left:-12px;
+}
+#destiny-long-text:before {
+    bottom:-12px;
+    right:-12px;
+}
+#destiny-long-text p {
+    margin: 0; 
+    padding: 0;
+}
+
+#talent-long-text:before,#talent-long-text:after
+{
+    content: '';
+    position: absolute;
+    width:10px;
+    height: 10px;
+    border: solid 2px #f6a139;
+    border-radius: 50%;
+}
+#talent-long-text:after {
+    top:-12px;
+    left:-12px;
+}
+#talent-long-text:before {
+    bottom:-12px;
+    right:-12px;
+}
+#talent-long-text p {
+    margin: 0; 
+    padding: 0;
+}
+
+#weakness-long-text:before,#weakness-long-text:after
+{
+    content: '';
+    position: absolute;
+    width:10px;
+    height: 10px;
+    border: solid 2px #f6a139;
+    border-radius: 50%;
+}
+#weakness-long-text:after {
+    top:-12px;
+    left:-12px;
+}
+#weakness-long-text:before {
+    bottom:-12px;
+    right:-12px;
+}
+#weakness-long-text p {
+    margin: 0; 
+    padding: 0;
+}
+
+#second-weakness-long-text:before,#second-weakness-long-text:after
+{
+    content: '';
+    position: absolute;
+    width:10px;
+    height: 10px;
+    border: solid 2px #f6a139;
+    border-radius: 50%;
+}
+#second-weakness-long-text:after {
+    top:-12px;
+    left:-12px;
+}
+#second-weakness-long-text:before {
+    bottom:-12px;
+    right:-12px;
+}
+#second-weakness-long-text p {
+    margin: 0; 
+    padding: 0;
+}
+
+
+@media only screen and (max-width: 768px) {
+  .result-row {
+    width: 80%; /* SPでの幅 */
+  }
+  #destiny-long-text {
+    width: 80%; /* SPでの幅 */
+  }
+}
+@media only screen and (max-width: 768px) {
+  .result-row {
+    width: 80%; /* SPでの幅 */
+  }
+  #talent-long-text {
+    width: 80%; /* SPでの幅 */
+  }
+}
+@media only screen and (max-width: 768px) {
+  .result-row {
+    width: 80%; /* SPでの幅 */
+  }
+  #weakness-long-text {
+    width: 80%; /* SPでの幅 */
+  }
+}
+@media only screen and (max-width: 768px) {
+  .result-row {
+    width: 80%; /* SPでの幅 */
+  }
+  #second-weakness-long-text {
+    width: 80%; /* SPでの幅 */
+  }
+}
+
+
+#destiny-title {
+  border-bottom: 3px solid white;
+  padding-bottom: 10px;
+  width: 40%;             /* 幅を80%に設定 */
+  margin-left: auto;      /* 左のマージンを自動に設定 */
+  margin-right: auto;     /* 右のマージンを自動に設定 */
+}
+#talent-title {
+  border-bottom: 3px solid white;
+  padding-bottom: 10px;
+  width: 40%;             /* 幅を80%に設定 */
+  margin-left: auto;      /* 左のマージンを自動に設定 */
+  margin-right: auto;     /* 右のマージンを自動に設定 */
+}
+#weakness-title {
+  border-bottom: 3px solid white;
+  padding-bottom: 10px;
+  width: 40%;             /* 幅を80%に設定 */
+  margin-left: auto;      /* 左のマージンを自動に設定 */
+  margin-right: auto;     /* 右のマージンを自動に設定 */
+}
+#second-weakness-title {
+  border-bottom: 3px solid white;
+  padding-bottom: 10px;
+  width: 40%;             /* 幅を80%に設定 */
+  margin-left: auto;      /* 左のマージンを自動に設定 */
+  margin-right: auto;     /* 右のマージンを自動に設定 */
+}

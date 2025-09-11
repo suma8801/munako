@@ -1,0 +1,876 @@
+/* ========================================
+   Users フォーム用スタイル
+   ======================================== */
+
+/* 共通フォームコンテナ */
+.users.form.content {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 30px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* ログインフォーム用（幅を調整） */
+.users.form.content.login {
+    max-width: 400px;
+    padding: 20px;
+}
+
+/* タイトル */
+.users.form.content h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 24px;
+}
+
+/* フィールドセット */
+.users.form.content fieldset {
+    border: none;
+    padding: 0;
+    margin-bottom: 25px;
+}
+
+/* 凡例 */
+.users.form.content legend {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 25px;
+    text-align: center;
+    font-weight: 500;
+}
+
+/* 入力フィールド */
+.users.form.content .input {
+    margin-bottom: 20px;
+}
+
+/* ラベル */
+.users.form.content label {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+/* 入力要素 */
+.users.form.content input,
+.users.form.content select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+    background: #fff;
+    line-height: 1.4;
+    vertical-align: middle;
+    min-height: 48px;
+}
+
+/* フォーカス時のスタイル */
+.users.form.content input:focus,
+.users.form.content select:focus {
+    outline: none;
+    border-color: #007cba;
+    box-shadow: 0 0 0 2px rgba(0,124,186,0.2);
+}
+
+/* セレクトボックス専用スタイル */
+.users.form.content select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding: 12px 40px 12px 12px;
+    cursor: pointer;
+    text-align: center;
+    text-align-last: center;
+    height: auto;
+    display: flex;
+    align-items: center;
+}
+
+/* セレクトボックスのオプション要素 */
+.users.form.content select option {
+    text-align: center;
+    padding: 8px 12px;
+    line-height: 1.4;
+    height: auto;
+}
+
+/* ヘルプテキスト */
+.users.form.content .help {
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+    display: block;
+}
+
+/* フォームアクション */
+.users.form.content .form-actions {
+    text-align: center;
+    margin-top: 30px;
+}
+
+/* ボタン */
+.users.form.content .button {
+    background: #007cba;
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 5px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+    line-height: 1.2;
+    min-height: 44px;
+    box-sizing: border-box;
+}
+
+.users.form.content .button:hover {
+    background: #005a87;
+}
+
+/* アウトラインスタイルのボタン */
+.users.form.content .button-outline {
+    background: transparent;
+    color: #007cba;
+    border: 1px solid #007cba;
+    line-height: 1.2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    box-sizing: border-box;
+}
+
+.users.form.content .button-outline:hover {
+    background: #007cba;
+    color: white;
+}
+
+/* エラーメッセージ */
+.users.form.content .error-message {
+    color: #d32f2f;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+/* 必須フィールドのマーク */
+.users.form.content label[for*="required"]::after {
+    content: " *";
+    color: #d32f2f;
+}
+
+/* ========================================
+   レスポンシブ対応
+   ======================================== */
+@media (max-width: 768px) {
+    .users.form.content {
+        max-width: 90%;
+        margin: 20px auto;
+        padding: 20px;
+    }
+    
+    .users.form.content h1 {
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .users.form.content .button {
+        padding: 10px 20px;
+        font-size: 14px;
+        margin: 3px;
+        min-height: 40px;
+    }
+}
+
+@media (max-width: 480px) {
+    .users.form.content {
+        padding: 15px;
+    }
+    
+    .users.form.content .form-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .users.form.content .button {
+        width: 100%;
+        max-width: 200px;
+        margin: 5px 0;
+    }
+}
+
+/* 画像: ログインページのイメージ余白 */
+.users.form.content.login .login-image {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 5px;
+}
+
+/* テキストリンク（下線・小さめ） */
+.text-link-underline {
+    text-decoration: underline;
+    color: #007cba;
+}
+.text-link-underline:hover {
+    color: #005a87;
+}
+.small-text {
+    font-size: 13px;
+}
+
+/* ログインページ専用: ボタン上の余白を縮小 */
+.users.form.content.login .form-actions {
+    margin-top: 12px;
+}
+
+/* ログインページ専用: パスワード忘れリンクとの間隔 */
+.users.form.content.login .form-actions .text-link-underline {
+    display: inline-block;
+    margin-top: 10px;
+}
+
+/* ========================================
+   パスワードリセットページ
+   ======================================== */
+.reset-password .reset-password-form {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.reset-password .form-description {
+    color: #666;
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    text-align: center;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #007cba;
+}
+
+.reset-password .form-control {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+    background: #fff;
+    line-height: 1.4;
+    vertical-align: middle;
+    min-height: 48px;
+}
+
+.reset-password .form-control:focus {
+    outline: none;
+    border-color: #007cba;
+    box-shadow: 0 0 0 2px rgba(0,124,186,0.2);
+}
+
+.reset-password .help {
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+    display: block;
+}
+
+.reset-password .form-actions {
+    text-align: center;
+    margin-top: 30px;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.reset-password .button {
+    padding: 12px 30px;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    line-height: 1.2;
+    min-height: 44px;
+    box-sizing: border-box;
+    border: none;
+}
+
+.reset-password .button:not(.button-outline) {
+    background: #007cba;
+    color: white;
+}
+
+.reset-password .button:not(.button-outline):hover {
+    background: #005a87;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 124, 186, 0.3);
+}
+
+.reset-password .button-outline {
+    background: transparent;
+    color: #007cba;
+    border: 1px solid #007cba;
+}
+
+.reset-password .button-outline:hover {
+    background: #007cba;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 124, 186, 0.3);
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .reset-password .form-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .reset-password .button {
+        width: 100%;
+        max-width: 250px;
+    }
+}
+
+/* ========================================
+   パスワード変更ページ
+   ======================================== */
+.change-password .change-password-form {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.change-password .form-description {
+    color: #666;
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    text-align: center;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #007cba;
+}
+
+.change-password .form-control {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+    background: #fff;
+    line-height: 1.4;
+    vertical-align: middle;
+    min-height: 48px;
+}
+
+.change-password .form-control:focus {
+    outline: none;
+    border-color: #007cba;
+    box-shadow: 0 0 0 2px rgba(0,124,186,0.2);
+}
+
+.change-password .help {
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+    display: block;
+}
+
+.change-password .form-actions {
+    text-align: center;
+    margin-top: 30px;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.change-password .button {
+    padding: 12px 30px;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    line-height: 1.2;
+    min-height: 44px;
+    box-sizing: border-box;
+    border: none;
+}
+
+.change-password .button:not(.button-outline) {
+    background: #007cba;
+    color: white;
+}
+
+.change-password .button:not(.button-outline):hover {
+    background: #005a87;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 124, 186, 0.3);
+}
+
+.change-password .button-outline {
+    background: transparent;
+    color: #007cba;
+    border: 1px solid #007cba;
+}
+
+.change-password .button-outline:hover {
+    background: #007cba;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 124, 186, 0.3);
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .change-password .form-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .change-password .button {
+        width: 100%;
+        max-width: 250px;
+    }
+}
+
+/* ========================================
+   パスワードリセット（メール送信）ページ
+   ======================================== */
+.forgot-password .forgot-password-form {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.forgot-password .form-description {
+    color: #666;
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    text-align: center;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #007cba;
+}
+
+.forgot-password .form-control {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+    background: #fff;
+    line-height: 1.4;
+    vertical-align: middle;
+    min-height: 48px;
+}
+
+.forgot-password .form-control:focus {
+    outline: none;
+    border-color: #007cba;
+    box-shadow: 0 0 0 2px rgba(0,124,186,0.2);
+}
+
+.forgot-password .form-actions {
+    text-align: center;
+    margin-top: 30px;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.forgot-password .button {
+    padding: 12px 30px;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    line-height: 1.2;
+    min-height: 44px;
+    box-sizing: border-box;
+    border: none;
+}
+
+.forgot-password .button:not(.button-outline) {
+    background: #007cba;
+    color: white;
+}
+
+.forgot-password .button:not(.button-outline):hover {
+    background: #005a87;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 124, 186, 0.3);
+}
+
+.forgot-password .button-outline {
+    background: transparent;
+    color: #007cba;
+    border: 1px solid #007cba;
+}
+
+.forgot-password .button-outline:hover {
+    background: #007cba;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 124, 186, 0.3);
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .forgot-password .form-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .forgot-password .button {
+        width: 100%;
+        max-width: 250px;
+    }
+}
+
+/* ========================================
+   パスワードリセット（作成中）ページ（旧バージョン）
+   ======================================== */
+.forgot-password .construction-container {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.forgot-password .construction-icon {
+    margin-bottom: 30px;
+    animation: float 3s ease-in-out infinite;
+}
+
+.forgot-password .construction-icon svg {
+    filter: drop-shadow(0 4px 8px rgba(0, 124, 186, 0.2));
+}
+
+.forgot-password h1 {
+    color: #007cba;
+    margin-bottom: 30px;
+    font-size: 28px;
+    font-weight: 600;
+}
+
+.forgot-password .construction-message {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 16px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.forgot-password .status-badge {
+    display: inline-flex;
+    align-items: center;
+    background: #fff3cd;
+    color: #856404;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(255, 193, 7, 0.2);
+}
+
+.forgot-password .status-dot {
+    width: 8px;
+    height: 8px;
+    background: #ffc107;
+    border-radius: 50%;
+    margin-right: 8px;
+    animation: pulse 2s infinite;
+}
+
+.forgot-password .message-text {
+    color: #6c757d;
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+.forgot-password .progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #e9ecef;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 15px;
+}
+
+.forgot-password .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #007cba 0%, #005a87 100%);
+    border-radius: 4px;
+    width: 75%;
+    animation: progress 2s ease-out;
+}
+
+.forgot-password .progress-text {
+    color: #007cba;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.forgot-password .action-buttons {
+    margin-top: 20px;
+}
+
+/* アニメーション */
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+@keyframes progress {
+    0% { width: 0%; }
+    100% { width: 75%; }
+}
+
+/* パスワードリセットページのレスポンシブ対応 */
+@media (max-width: 768px) {
+    .forgot-password .construction-container {
+        padding: 30px 15px;
+    }
+    
+    .forgot-password .construction-icon svg {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .forgot-password h1 {
+        font-size: 24px;
+    }
+    
+    .forgot-password .construction-message {
+        padding: 20px;
+    }
+}
+
+/* ========================================
+   ホームページ
+   ======================================== */
+.home-page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.home-page .welcome-container {
+    text-align: center;
+    background: #fff;
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.home-page .welcome-title {
+    color: #007cba;
+    font-size: 36px;
+    font-weight: 600;
+    margin-bottom: 30px;
+    text-shadow: 0 2px 4px rgba(0, 124, 186, 0.1);
+}
+
+.home-page .welcome-message {
+    margin-bottom: 40px;
+}
+
+.home-page .user-greeting {
+    font-size: 20px;
+    color: #333;
+    line-height: 1.6;
+    margin: 0;
+    padding: 20px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 8px;
+    border-left: 4px solid #007cba;
+}
+
+.home-page .user-info {
+    margin-bottom: 40px;
+}
+
+.home-page .info-card {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 25px;
+    text-align: left;
+    border: 1px solid #e9ecef;
+}
+
+.home-page .info-card h3 {
+    color: #007cba;
+    font-size: 18px;
+    margin-bottom: 20px;
+    text-align: center;
+    border-bottom: 2px solid #007cba;
+    padding-bottom: 10px;
+}
+
+.home-page .info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.home-page .info-item:last-child {
+    border-bottom: none;
+}
+
+.home-page .info-item .label {
+    font-weight: 500;
+    color: #666;
+    min-width: 120px;
+}
+
+.home-page .info-item .value {
+    color: #333;
+    font-weight: 500;
+}
+
+.home-page .action-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.home-page .button {
+    padding: 12px 24px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    min-width: 140px;
+    text-align: center;
+}
+
+.home-page .button-primary {
+    background: #007cba;
+    color: white;
+    border: 1px solid #007cba;
+}
+
+.home-page .button-primary:hover {
+    background: #005a87;
+    border-color: #005a87;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 124, 186, 0.3);
+}
+
+.home-page .button-secondary {
+    background: #6c757d;
+    color: white;
+    border: 1px solid #6c757d;
+}
+
+.home-page .button-secondary:hover {
+    background: #545b62;
+    border-color: #545b62;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+}
+
+.home-page .button-outline {
+    background: transparent;
+    color: #007cba;
+    border: 1px solid #007cba;
+}
+
+.home-page .button-outline:hover {
+    background: #007cba;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 124, 186, 0.3);
+}
+
+/* ホームページのレスポンシブ対応 */
+@media (max-width: 768px) {
+    .home-page {
+        padding: 20px 15px;
+    }
+    
+    .home-page .welcome-container {
+        padding: 30px 20px;
+    }
+    
+    .home-page .welcome-title {
+        font-size: 28px;
+    }
+    
+    .home-page .user-greeting {
+        font-size: 18px;
+        padding: 15px;
+    }
+    
+    .home-page .info-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    .home-page .info-item .label {
+        min-width: auto;
+        font-size: 14px;
+    }
+    
+    .home-page .action-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .home-page .button {
+        width: 100%;
+        max-width: 250px;
+    }
+}
+
+/* Page（幅を調整） */
+.pages.content {
+    max-width: 400px;
+    padding: 20px;
+}
+
