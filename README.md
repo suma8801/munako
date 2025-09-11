@@ -11,7 +11,7 @@
 ## 1. リポジトリを取得
 ```bash
 git clone https://github.com/あなたのユーザー名/witch.git
-cd witch
+cd munako
 ```
 
 ## 2. 環境変数の設定
