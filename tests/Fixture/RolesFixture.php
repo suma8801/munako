@@ -20,18 +20,8 @@ class RolesFixture extends TestFixture
         $this->records = [
             [
                 'id' => 1,
-                'name' => '一般',
-                'created' => '2025-01-01 00:00:00',
-            ],
-            [
-                'id' => 2,
-                'name' => 'オペレータ',
-                'created' => '2025-01-01 00:00:00',
-            ],
-            [
-                'id' => 3,
-                'name' => '管理者',
-                'created' => '2025-01-01 00:00:00',
+                'name' => 'Lorem ipsum dolor sit amet',
+                'created' => '2025-09-11 21:55:43',
             ],
         ];
         parent::init();

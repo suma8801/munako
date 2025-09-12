@@ -32,15 +32,13 @@ class UsersController extends AppController
         parent::initialize();
         
         // 認証が必要ないアクションを設定（ミドルウェアレベルで処理）
-        // この設定は不要です
+        $this->Authentication->allowUnauthenticated(['login', 'register','forgotPassword','resetPassword']);
     }
 
     public function beforeFilter(\Cake\Event\EventInterface $event)
     {
         parent::beforeFilter($event);
 
-        // これらのアクションは未認証でもアクセス可能
-        $this->Authentication->allowUnauthenticated(['login', 'register','forgotPassword','resetPassword']);
     }
 
 
@@ -105,7 +103,7 @@ class UsersController extends AppController
 
     /**
      * ユーザー登録ページ
-     * (管理者のみ登録可能)
+     * (一般の人の登録ページ)
      *
      * @return \Cake\Http\Response|null
      */
@@ -116,30 +114,13 @@ class UsersController extends AppController
         // 既存管理者の有無を確認（role_id=3 を管理者とする）
         $hasAdmin = $this->Users->exists(['role_id' => 3]);
 
-        // 認証必須（ただし、管理者未作成時は未認証でも許可）
-        $identity = $this->request->getAttribute('authentication')?->getIdentity();
-        if (!$identity && $hasAdmin) {
-            return $this->redirect(['action' => 'login']);
-        }
-
-        // 権限チェック: オペレータ(2)または管理者(3)のみ（管理者未作成時はスキップ）
-        if ($hasAdmin && $identity) {
-            $currentUser = $identity->getOriginalData();
-            $currentRoleId = $currentUser->role_id ?? null;
-            if (!in_array((int)$currentRoleId, [2, 3], true)) {
-                $this->Flash->error('この操作を行う権限がありません。');
-                return $this->redirect(['controller' => 'Pages', 'action' => 'home']);
-            }
-        }
-
         // セレクト用マスタ取得
         $roles = $this->fetchTable('Roles')->find('list', ['keyField' => 'id', 'valueField' => 'name'])->toArray();
+
         // 初回登録時は管理者のみ選択可能にする
         if (!$hasAdmin) {
             $roles = array_intersect_key($roles, [3 => true]);
         }
-        $plans = $this->fetchTable('Plans')->find('list', ['keyField' => 'id', 'valueField' => 'name'])->toArray();
-        $courses = $this->fetchTable('Courses')->find('list', ['keyField' => 'id', 'valueField' => 'name'])->toArray();
 
         if ($this->request->is('post')) {
             $data = $this->request->getData();
@@ -164,7 +145,67 @@ class UsersController extends AppController
             }
         }
 
-        $this->set(compact('roles', 'plans', 'courses', 'hasAdmin'));
+        $this->set(compact('roles', 'hasAdmin'));
+    }
+
+
+    /**
+     * ユーザー登録ページ
+     * (管理者,スタッフだけが操作可能な登録ページ)
+     *
+     * @return \Cake\Http\Response|null
+     */
+    public function specialRegister()
+    {
+        $this->request->allowMethod(['get', 'post']);
+
+        // 認証必須（ただし、管理者未作成時は未認証でも許可）
+        $identity = $this->request->getAttribute('authentication')?->getIdentity();
+        if (!$identity ) {
+            return $this->redirect(['action' => 'login']);
+        }
+
+        // 権限チェック: スタッフ(2)または管理者(3)のみ
+        if ($identity) {
+            $currentUser = $identity->getOriginalData();
+            $currentRoleId = $currentUser->role_id ?? null;
+            if (!in_array((int)$currentRoleId, [2, 3], true)) {
+                $this->Flash->error('この操作を行う権限がありません。');
+                return $this->redirect(['controller' => 'Homes', 'action' => 'index']);
+            }
+        }
+
+        // セレクト用マスタ取得（role_idに応じて選択可能なロールを制限）
+        $query = $this->fetchTable('Roles')->find('list', ['keyField' => 'id', 'valueField' => 'name']);
+        
+        // role_idが2の場合は、role_id 1,2のみ選択可能
+        if ($currentRoleId === 2) {
+            $query->where(['id IN' => [1, 2]]);
+        }
+        // role_idが3の場合は、すべてのロールを選択可能（制限なし）
+        
+        $roles = $query->toArray();
+
+        if ($this->request->is('post')) {
+            $data = $this->request->getData();
+
+            // パスワード確認
+            if (($data['password'] ?? '') !== ($data['password_confirm'] ?? '')) {
+                $this->Flash->error('パスワード（確認）が一致しません。');
+            } else {
+                $user = $this->Users->newEmptyEntity();
+                $user = $this->Users->patchEntity($user, $data);
+
+                if ($this->Users->save($user)) {
+                    $this->Flash->success('ユーザー登録が完了しました。');
+                    return $this->redirect(['controller' => 'Users', 'action' => 'login']);
+                }
+
+                $this->Flash->error('ユーザー登録に失敗しました。入力内容をご確認ください。');
+            }
+        }
+
+        $this->set(compact('roles'));
     }
 
     /**

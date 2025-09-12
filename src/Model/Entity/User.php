@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
-use Authentication\PasswordHasher\DefaultPasswordHasher;
 
 /**
  * User Entity
@@ -15,12 +14,11 @@ use Authentication\PasswordHasher\DefaultPasswordHasher;
  * @property string $yomi
  * @property string $password
  * @property int $role_id
- * @property int $plan_id
- * @property int $course_id
- * @property \Cake\I18n\DateTime $expire
- * @property string $token
- * @property \Cake\I18n\DateTime $token_expire
+ * @property string|null $token
+ * @property \Cake\I18n\DateTime|null $token_expire
  * @property \Cake\I18n\DateTime $created
+ *
+ * @property \App\Model\Entity\Role $role
  */
 class User extends Entity
 {
@@ -39,9 +37,6 @@ class User extends Entity
         'yomi' => true,
         'password' => true,
         'role_id' => true,
-        'plan_id' => true,
-        'course_id' => true,
-        'expire' => true,
         'token' => true,
         'token_expire' => true,
         'created' => true,
@@ -54,20 +49,6 @@ class User extends Entity
      */
     protected array $_hidden = [
         'password',
+        'token',
     ];
-
-    /**
-     * パスワードのハッシュ化
-     *
-     * @param string $password 平文パスワード
-     * @return string|null ハッシュ済みパスワード
-     */
-    protected function _setPassword(string $password): ?string
-    {
-        if ($password === '') {
-            return null;
-        }
-
-        return (new DefaultPasswordHasher())->hash($password);
-    }
 }

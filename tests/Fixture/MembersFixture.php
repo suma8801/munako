@@ -6,9 +6,9 @@ namespace App\Test\Fixture;
 use Cake\TestSuite\Fixture\TestFixture;
 
 /**
- * UsersFixture
+ * MembersFixture
  */
-class UsersFixture extends TestFixture
+class MembersFixture extends TestFixture
 {
     /**
      * Init method
@@ -20,14 +20,11 @@ class UsersFixture extends TestFixture
         $this->records = [
             [
                 'id' => 1,
-                'email' => 'Lorem ipsum dolor sit amet',
+                'class' => 1,
+                'no' => 1,
                 'name' => 'Lorem ipsum dolor sit amet',
                 'yomi' => 'Lorem ipsum dolor sit amet',
-                'password' => 'Lorem ipsum dolor sit amet',
-                'role_id' => 1,
-                'token' => 'Lorem ipsum dolor sit amet',
-                'token_expire' => '2025-09-11 21:56:05',
-                'created' => '2025-09-11 21:56:05',
+                'gone' => 1,
             ],
         ];
         parent::init();

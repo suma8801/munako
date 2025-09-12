@@ -31,58 +31,38 @@ class HomesController extends AppController
         parent::initialize();
         
         // 認証が必要ないアクションを設定（ミドルウェアレベルで処理）
-        // この設定は不要です
+        $this->Authentication->allowUnauthenticated(['index']);
     }
 
     public function beforeFilter(\Cake\Event\EventInterface $event)
     {
         parent::beforeFilter($event);
+
+        $this->set('title', '宗高同窓会ホーム');
+        $this->set('description', '宗高昭和56年卒業のホームページ');
+        $this->set('keywords', '宗像 高校 同窓生');
+        $this->set('author', 'suma8801@gmail.com');
+        $this->set('robots', 'noindex, nofollow');
+        $this->set('canonical', '宗高同窓会ホーム');
+        $this->set('og:title', 'ホームページ');
     }
 
-    // レガシーページ
-    public function regacy()
-    {
-        // レイアウトのセット
-        $this->set('title', '天命占い');
-        $this->set('style', 'prostyle');
-
-        // ハンバーガーメニューの表示判定
-        $user = $this->Authentication->getIdentity();
-        $showHamburger = $user && in_array($user->role_id, [2, 3]);
-        $this->set('showHamburger', $showHamburger);
-
-        // レイアウトは旧版
-        $this->viewBuilder()->setLayout("regacy_layout");
-    }
-
-    // レガシーリザルト
-    public function regacyResult()
-    {
-        // レイアウトのセット
-        $this->set('title', '天命占い結果');
-        $this->set('style', 'proresultstyles');
-
-        // ハンバーガーメニューの表示判定
-        $user = $this->Authentication->getIdentity();
-        $showHamburger = $user && in_array($user->role_id, [2, 3]);
-        $this->set('showHamburger', $showHamburger);
-
-        // レイアウトは旧版
-        $this->viewBuilder()->setLayout("regacy_layout");
-
-        // ポストの処理
+    public function index(){
         if ($this->request->is('post')) {
-            // UserServiceのインスタンスを生成し、ロジックを実行
-            $tenmeiService = new TenmeiService();
-
-            // それそれのテーブルのエンティティを取得
-            $result_set = $tenmeiService->get_tenmei_result( $this->request );
-
-        } else {
-            // postでない場合は、リダイレクト
-            return $this->redirect(['controller' => 'Homes', 'action' => 'regacy']);
+            $data = $this->request->getData();
+            
+            // ログインタイプを判定
+            $loginType = $data['login_type'] ?? null;
+            
+            if ($loginType === 'general') {
+                // 一般ログイン処理
+                return $this->redirect(['controller' => 'Users', 'action' => 'login', '?' => ['type' => 'general']]);
+            } elseif ($loginType === 'staff') {
+                // スタッフログイン処理
+                return $this->redirect(['controller' => 'Users', 'action' => 'login', '?' => ['type' => 'staff']]);
+            }
         }
-        $this->set( compact('result_set') );
     }
+
 
 }

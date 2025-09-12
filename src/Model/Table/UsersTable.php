@@ -12,6 +12,8 @@ use Authentication\PasswordHasher\DefaultPasswordHasher;
 /**
  * Users Model
  *
+ * @property \App\Model\Table\RolesTable&\Cake\ORM\Association\BelongsTo $Roles
+ *
  * @method \App\Model\Entity\User newEmptyEntity()
  * @method \App\Model\Entity\User newEntity(array $data, array $options = [])
  * @method array<\App\Model\Entity\User> newEntities(array $data, array $options = [])
@@ -48,14 +50,6 @@ class UsersTable extends Table
 
         $this->belongsTo('Roles', [
             'foreignKey' => 'role_id',
-            'joinType' => 'INNER',
-        ]);
-        $this->belongsTo('Plans', [
-            'foreignKey' => 'plan_id',
-            'joinType' => 'INNER',
-        ]);
-        $this->belongsTo('Courses', [
-            'foreignKey' => 'course_id',
             'joinType' => 'INNER',
         ]);
     }
@@ -96,18 +90,13 @@ class UsersTable extends Table
             ->notEmptyString('role_id');
 
         $validator
-            ->integer('plan_id')
-            ->requirePresence('plan_id', 'create')
-            ->notEmptyString('plan_id');
+            ->scalar('token')
+            ->maxLength('token', 255)
+            ->allowEmptyString('token');
 
         $validator
-            ->integer('course_id')
-            ->notEmptyString('course_id');
-
-        $validator
-            ->dateTime('expire')
-            ->requirePresence('expire', 'create')
-            ->notEmptyDateTime('expire');
+            ->dateTime('token_expire')
+            ->allowEmptyDateTime('token_expire');
 
         return $validator;
     }
@@ -123,8 +112,6 @@ class UsersTable extends Table
     {
         $rules->add($rules->isUnique(['email']), ['errorField' => 'email']);
         $rules->add($rules->existsIn(['role_id'], 'Roles'), ['errorField' => 'role_id']);
-        $rules->add($rules->existsIn(['plan_id'], 'Plans'), ['errorField' => 'plan_id']);
-        $rules->add($rules->existsIn(['course_id'], 'Courses'), ['errorField' => 'course_id']);
 
         return $rules;
     }

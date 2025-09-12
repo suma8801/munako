@@ -25,6 +25,9 @@ class UsersTableTest extends TestCase
      */
     protected array $fixtures = [
         'app.Users',
+        'app.Roles',
+        'app.Plans',
+        'app.Courses',
     ];
 
     /**
@@ -69,6 +72,17 @@ class UsersTableTest extends TestCase
      * @link \App\Model\Table\UsersTable::buildRules()
      */
     public function testBuildRules(): void
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test verifyPassword method
+     *
+     * @return void
+     * @link \App\Model\Table\UsersTable::verifyPassword()
+     */
+    public function testVerifyPassword(): void
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
