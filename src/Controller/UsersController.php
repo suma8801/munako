@@ -193,6 +193,9 @@ class UsersController extends AppController
             if (($data['password'] ?? '') !== ($data['password_confirm'] ?? '')) {
                 $this->Flash->error('パスワード（確認）が一致しません。');
             } else {
+                // パスワード確認フィールドを除外
+                unset($data['password_confirm']);
+                
                 $user = $this->Users->newEmptyEntity();
                 $user = $this->Users->patchEntity($user, $data);
 

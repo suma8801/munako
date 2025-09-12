@@ -117,6 +117,22 @@ class UsersTable extends Table
     }
 
     /**
+     * 認証用のfinderメソッド
+     *
+     * @param \Cake\ORM\Query $query クエリオブジェクト
+     * @param array $options オプション
+     * @return \Cake\ORM\Query
+     */
+    public function findAuth(\Cake\ORM\Query $query, array $options)
+    {
+        $query
+            ->select(['id', 'email', 'name', 'yomi', 'password', 'role_id', 'token', 'token_expire', 'created'])
+            ->where(['Users.email' => $options['username']]);
+
+        return $query;
+    }
+
+    /**
      * パスワードを検証する
      *
      * @param string $password 検証するパスワード

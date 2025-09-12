@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
+use Authentication\PasswordHasher\DefaultPasswordHasher;
 
 /**
  * User Entity
@@ -51,4 +52,16 @@ class User extends Entity
         'password',
         'token',
     ];
+
+    /**
+     * パスワードをハッシュ化する
+     *
+     * @param string $password 平文パスワード
+     * @return string ハッシュ化されたパスワード
+     */
+    protected function _setPassword(string $password): string
+    {
+        $hasher = new DefaultPasswordHasher();
+        return $hasher->hash($password);
+    }
 }
