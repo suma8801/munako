@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Controller\AppController;
-use App\Service\TenmeiService;
+use App\Service\MemberSearchService;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Http\Response;
 use Cake\Controller\Component\RequestHandlerComponent;
@@ -64,5 +64,23 @@ class HomesController extends AppController
         }
     }
 
+    // 一般がログインした時に表示されるページ
+    public function regacy()
+    {
+        // メソッドチェック
+        $this->request->allowMethod(['get', 'post']);
+
+        // サービスクラスをインスタンス化
+        $memberSearchService = new MemberSearchService();
+        
+        if ($this->request->is('post')) {
+            $data = $this->request->getData("keyword");
+            $results = $memberSearchService->searchMembers($data);
+            $this->set(compact('results'));
+        } else {
+            $results = $memberSearchService->searchMembers('');
+            $this->set(compact('results'));
+        }
+    }
 
 }

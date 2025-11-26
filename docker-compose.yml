@@ -6,7 +6,7 @@
 services:
   app:
     build: ./docker/app
-    container_name: cakephp-app
+    container_name: munako-app
     volumes:
       - .:/var/www/html
     ports:
@@ -17,7 +17,7 @@ services:
   db:
     image: mysql:8.0
     platform: linux/amd64
-    container_name: cakephp-db
+    container_name: munako-db
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
@@ -51,7 +51,7 @@ services:
   composer:
     build: ./docker/app   # ← ここを変更
     image: composer:2
-    container_name: composer
+    container_name: munako_composer
     volumes:
       - .:/app
     working_dir: /app

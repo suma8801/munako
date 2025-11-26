@@ -18,6 +18,13 @@
     <meta name="keywords" content="<?= $keywords ?? '宗像,高校,同窓会' ?>">
     <meta name="author" content="<?= $author ?? 'ymatsu' ?>">
     <meta name="robots" content="<?= $robots ?? 'index, follow' ?>">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<!--
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.min.css" integrity="sha384-Q/b68FXi/uzI6bjcGbx7kHAobgdK2x1qOUrqdTvipaJci87t0PRovmYAIrCVE4x5" crossorigin="anonymous">
+-->
+    <?= $this->Html->css('m_style'); ?>
     
     <title>
         <?= $this->fetch('title') ? $this->fetch('title') . ' - ' : '' ?>
@@ -117,18 +124,20 @@
     </footer>
 
     <!-- JavaScript -->
+     <!--
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous">
+    </script>
+-->
+    <script
+  src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous">
+    </script>
     <script>
         // ナビゲーションメニューのトグル
-        document.addEventListener('DOMContentLoaded', function() {
-            const toggle = document.querySelector('.navbar-toggle');
-            const menu = document.querySelector('.navbar-menu');
-            
-            if (toggle && menu) {
-                toggle.addEventListener('click', function() {
-                    menu.classList.toggle('active');
-                    toggle.classList.toggle('active');
-                });
-            }
+        $(function() {
+            $('.navbar-toggle').on('click', function() {
+                $('.navbar-menu').toggleClass('active');
+                $(this).toggleClass('active');
+            });
         });
     </script>
 </body>

@@ -1130,7 +1130,8 @@
 }
 
 .navbar-nav {
-    display: flex;
+    display: flex !important;
+    flex-direction: row !important;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -1455,23 +1456,28 @@
    レスポンシブ対応
    ======================================== */
 @media (max-width: 768px) {
+    .navbar {
+        position: relative;
+    }
+    
     .navbar-toggle {
         display: flex;
     }
     
     .navbar-nav {
-        position: fixed;
+        position: absolute;
         top: 100%;
         left: 0;
         width: 100%;
         background: white;
-        flex-direction: column;
+        flex-direction: column !important;
         padding: 1rem;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         transform: translateY(-100%);
         opacity: 0;
         visibility: hidden;
         transition: all 0.3s ease;
+        z-index: 999;
     }
     
     .navbar-menu.active .navbar-nav {

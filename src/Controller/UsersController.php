@@ -60,13 +60,6 @@ class UsersController extends AppController
                 $user = $this->Authentication->getIdentity();
                 $userData = $user->getOriginalData();
                 
-                // コースが0に設定されている時はパスワード変更していない
-                if ($userData->course_id == 0) {
-                    // 初回ログイン時はパスワード変更を促す
-                    $this->Flash->warning('初回ログインです。パスワードを変更してください。');
-                    return $this->redirect(['action' => 'changePassword']);
-                }
-                
                 // ログイン成功時のリダイレクト先
                 $redirect = $this->request->getQuery('redirect', [
                     'controller' => 'Homes',
