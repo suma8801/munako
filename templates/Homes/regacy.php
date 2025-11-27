@@ -23,21 +23,36 @@
 //var_export( $results );
 foreach( $results as $r ) {
 
-    if( $r->gone === 0 ) {
-        // 生きてる、出席
-        $right = ' border-success bg-info c-2023';
-        $dark = '';
-        $image = $this->Html->image( 'munako/' . $r->class . '/' . $r->no . '.png' , 
-            ['class' => 'card-img-top c-2023' ,'data-munako' => $r->class . '/' . $r->no . '.png', 'data-sw' => 'off' ] );
+    // 複数あるかもしれない出席情報
+    $class_str = "" ;
+    $attend_str = "" ;
+    foreach( $r->attends as $a ) {
+        
+        if( $a->attend_year == 2023 ) {
+            $class_str .= "c-2023" ;
+            $attend_str .= "(2023)" ;
+        }
+        if( $a->attend_year == 2027 ) {
+            $class_str .= "c-2027" ;
+            $attend_str .= "(2027)" ;
+        }
+    }
 
-    } else if( $r->gone == 1 ) {
-
+    // 死んでるか生きてるか
+    if( $r->gone == 1 ) {
         // 死んでる
         $right = '';
         $dark = ' bg-dark text-white';
         $image = $this->Html->image( 'munako/' . $r->class . '/' . $r->no . '.png' , ['class' => 'card-img-top' ] );
-    } else {
 
+    } else if( $class_str != "" ) { // 出席したことがある
+        // 生きてる、出席
+        $right = ' border-success bg-info '.$class_str;
+        $dark = '';
+        $image = $this->Html->image( 'munako/' . $r->class . '/' . $r->no . '.png' , 
+            ['class' => 'card-img-top '.$class_str ,'data-munako' => $r->class . '/' . $r->no . '.png', 'data-sw' => 'off' ] );
+
+    } else {
         // 不明
         $dark = '';
         $right = '';
@@ -53,7 +68,7 @@ foreach( $results as $r ) {
 ?>
         <div class="card-body">
             <p class="card-text fs-4">
-                <?= $r->class . '組 : ' . $r->name ?> 
+                <?= $r->class . '組 : ' . $r->name ." ".$attend_str ?>  
             </p>
         </div><!-- card-body -->
     </div><!-- card -->
@@ -66,17 +81,19 @@ foreach( $results as $r ) {
 </div>
 <?php
 $this->start("myscript");
+$imgBasePath = $this->Url->build('/img/munako/', ['fullBase' => false]);
 ?>
 <script>
 $(function() {
+    var imgBasePath = '<?= $imgBasePath ?>';
     $(".c-2023").click(function(){
         if( $(this).data("sw") == 'off' ){
 
-            $(this).attr("src" , '/img/munako/' + '2023/' + $(this).data('munako') );
+            $(this).attr("src" , imgBasePath + '2023/' + $(this).data('munako') );
             $(this).data("sw", "on");
         } else {
 
-            $(this).attr("src" , '/img/munako/' + $(this).data('munako') );
+            $(this).attr("src" , imgBasePath + $(this).data('munako') );
             $(this).data("sw", "off");
         }
     });

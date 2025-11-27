@@ -99,4 +99,7 @@ docker compose down -v
 ```bash
 docker logs munako-db
 ```
-
+### docker でアプリにログインしてコマンドを実行する（cake bake とか）
+```bash
+docker compose exec app bash
+```

@@ -23,7 +23,8 @@ class MemberSearchService
         if( $param == '' ) {
             $results = $this->membersTable->find('all', [
                 'conditions' => ['class' => 1 ],
-                'order' => 'id asc'
+                'order' => 'id asc',
+                'contain' => ['Attends']
             ]);
 
             return $results->toArray();
@@ -36,12 +37,14 @@ class MemberSearchService
                 //物故者
                 $results = $this->membersTable->find('all', [
                     'conditions' => ['gone' => 1 ],
-                    'order' => 'id asc'
+                    'order' => 'id asc',
+                    'contain' => ['Attends']
                 ]);
             } else {
                 $results = $this->membersTable->find('all', [
                     'conditions' => ['class' => $param ],
-                    'order' => 'id asc'
+                    'order' => 'id asc',
+                    'contain' => ['Attends']
                 ]);
             }
         } else {
@@ -49,7 +52,8 @@ class MemberSearchService
             if( $param == 'a' ) {
                 $results = $this->membersTable->find('all', [
                     'conditions' => ['gone' => '0' ],
-                    'order' => 'id asc'
+                    'order' => 'id asc',
+                    'contain' => ['Attends']
                 ]);
     
             } else {
@@ -57,7 +61,8 @@ class MemberSearchService
                     'conditions' => [ 'OR' =>
                         [ 'name LIKE' => '%' . $param .'%' , 'yomi LIKE' => '%' . $param .'%' ]
                     ],
-                    'order' => 'id asc'
+                    'order' => 'id asc',
+                    'contain' => ['Attends']
                 ]);
             }
         }
