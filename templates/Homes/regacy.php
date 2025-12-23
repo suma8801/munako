@@ -26,13 +26,13 @@ foreach( $results as $r ) {
     // 複数あるかもしれない出席情報
     $class_str = "" ;
     $attend_str = "" ;
-    foreach( $r->attends as $a ) {
+    foreach( $r->reunion_attends as $a ) {
         
-        if( $a->attend_year == 2023 ) {
+        if( $a->year == 2023 ) {
             $class_str .= "c-2023" ;
             $attend_str .= "(2023)" ;
         }
-        if( $a->attend_year == 2027 ) {
+        if( $a->year == 2027 ) {
             $class_str .= "c-2027" ;
             $attend_str .= "(2027)" ;
         }
