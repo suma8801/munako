@@ -15,7 +15,7 @@ use Cake\ORM\Entity;
  * @property string $yomi
  * @property int|null $gone
  *
- * @property \Cake\ORM\ResultSet<\App\Model\Entity\Attend>|\App\Model\Entity\Attend[] $attends
+ * @property \Cake\ORM\ResultSet<\App\Model\Entity\ReunionAttend>|\App\Model\Entity\ReunionAttend[] $reunion_attends
  */
 class Member extends Entity
 {
@@ -34,6 +34,6 @@ class Member extends Entity
         'name' => true,
         'yomi' => true,
         'gone' => true,
-        'attends' => true,
+        'reunion_attends' => true,
     ];
 }

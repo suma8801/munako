@@ -6,18 +6,16 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * Attend Entity
+ * AttendStatus Entity
  *
  * @property int $id
- * @property int $member_id
- * @property int $attend_year
- * @property string|null $note
+ * @property string $name
  * @property \Cake\I18n\DateTime $created
  * @property \Cake\I18n\DateTime $modified
  *
- * @property \App\Model\Entity\Member $member
+ * @property \App\Model\Entity\ReunionAttend[] $reunion_attends
  */
-class Attend extends Entity
+class AttendStatus extends Entity
 {
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -29,11 +27,10 @@ class Attend extends Entity
      * @var array<string, bool>
      */
     protected array $_accessible = [
-        'member_id' => true,
-        'attend_year' => true,
-        'note' => true,
+        'name' => true,
         'created' => true,
         'modified' => true,
-        'member' => true,
+        'reunion_attends' => true,
     ];
 }
+
