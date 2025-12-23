@@ -17,3 +17,8 @@ CREATE TABLE `users` (
   `created` datetime NOT NULL COMMENT 'ユーザーの利用開始',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='ユーザーテーブル';
+
+
+INSERT INTO `users` (`id`, `email`, `name`, `yomi`, `password`, `role_id`, `token`, `token_expire`, `created`)
+VALUES
+	(1,'suma8801@gmail.com','松本豊','まつもとゆたか','$2y$10$tiOEKbHuYM71dIx7hOrgteQSrpixSRlsWSs7w1gxM12TrcaJ2KecC',3,NULL,NULL,'2025-09-12 16:44:00');
