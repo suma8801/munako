@@ -60,11 +60,20 @@ class UsersController extends AppController
                 $user = $this->Authentication->getIdentity();
                 $userData = $user->getOriginalData();
                 
-                // ログイン成功時のリダイレクト先
-                $redirect = $this->request->getQuery('redirect', [
-                    'controller' => 'Homes',
-                    'action' => 'regacy'
-                ]);
+                // ログイン成功時のリダイレクト先を決定
+                // スタッフ(2)または管理者(3)の場合はダッシュボードへ、それ以外はregacyへ
+                $roleId = $userData->role_id ?? null;
+                if (in_array((int)$roleId, [2, 3], true)) {
+                    $redirect = $this->request->getQuery('redirect', [
+                        'controller' => 'Homes',
+                        'action' => 'dashboard'
+                    ]);
+                } else {
+                    $redirect = $this->request->getQuery('redirect', [
+                        'controller' => 'Homes',
+                        'action' => 'regacy'
+                    ]);
+                }
                 
                 return $this->redirect($redirect);
             }
