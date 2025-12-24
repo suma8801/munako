@@ -111,17 +111,35 @@ document.addEventListener('DOMContentLoaded', function() {
     const ctx = document.getElementById('attendanceChart').getContext('2d');
     
     const years = <?= json_encode($years) ?>;
-    const counts = <?= json_encode($counts) ?>;
+    const maleCounts = <?= json_encode($maleCounts) ?>;
+    const femaleCounts = <?= json_encode($femaleCounts) ?>;
+    const totalCounts = <?= json_encode($totalCounts) ?>;
     
     new Chart(ctx, {
         type: 'bar',
         data: {
             labels: years,
             datasets: [{
-                label: '参加者数',
-                data: counts,
-                backgroundColor: 'rgba(0, 124, 186, 0.8)',
-                borderColor: 'rgba(0, 124, 186, 1)',
+                label: '男性',
+                data: maleCounts,
+                backgroundColor: 'rgba(54, 162, 235, 0.8)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 2,
+                borderRadius: 8,
+                borderSkipped: false,
+            }, {
+                label: '女性',
+                data: femaleCounts,
+                backgroundColor: 'rgba(255, 99, 132, 0.8)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 2,
+                borderRadius: 8,
+                borderSkipped: false,
+            }, {
+                label: '全体',
+                data: totalCounts,
+                backgroundColor: 'rgba(153, 102, 255, 0.8)',
+                borderColor: 'rgba(153, 102, 255, 1)',
                 borderWidth: 2,
                 borderRadius: 8,
                 borderSkipped: false,
