@@ -82,6 +82,11 @@ class MembersTable extends Table
             ->integer('gone')
             ->allowEmptyString('gone');
 
+        $validator
+            ->integer('sex')
+            ->requirePresence('sex', 'create')
+            ->notEmptyString('sex');
+
         return $validator;
     }
 }

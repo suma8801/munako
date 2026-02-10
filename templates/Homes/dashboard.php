@@ -80,23 +80,25 @@
                 // 2023年の出席数
                 $classAttendance2023 = $attendance2023ByClass[$classStat->class] ?? 0;
                 ?>
-                <div class="class-stat-card">
-                    <h3><?= h($classStat->class) ?>組</h3>
-                    <div class="class-stat-details">
-                        <div class="class-stat-item">
-                            <span class="class-stat-label">合計人数</span>
-                            <span class="class-stat-value"><?= $classStat->count ?>名</span>
-                        </div>
-                        <div class="class-stat-item">
-                            <span class="class-stat-label">2023年出席</span>
-                            <span class="class-stat-value"><?= $classAttendance2023 ?>名</span>
-                        </div>
-                        <div class="class-stat-item">
-                            <span class="class-stat-label">物故者</span>
-                            <span class="class-stat-value"><?= $classDeceasedCount ?>名</span>
+                <a href="<?= $this->Url->build(['action' => 'classAttendance', $classStat->class]) ?>" class="class-stat-card-link">
+                    <div class="class-stat-card">
+                        <h3><?= h($classStat->class) ?>組</h3>
+                        <div class="class-stat-details">
+                            <div class="class-stat-item">
+                                <span class="class-stat-label">合計人数</span>
+                                <span class="class-stat-value"><?= $classStat->count ?>名</span>
+                            </div>
+                            <div class="class-stat-item">
+                                <span class="class-stat-label">2023年出席</span>
+                                <span class="class-stat-value"><?= $classAttendance2023 ?>名</span>
+                            </div>
+                            <div class="class-stat-item">
+                                <span class="class-stat-label">物故者</span>
+                                <span class="class-stat-value"><?= $classDeceasedCount ?>名</span>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </a>
             <?php endforeach; ?>
         </div>
     </div>
@@ -334,17 +336,25 @@ $this->start('css');
     gap: 1.5rem;
 }
 
+.class-stat-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
 .class-stat-card {
     background: #f8f9fa;
     border-radius: 8px;
     padding: 1.5rem;
     border: 1px solid #e9ecef;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
 }
 
 .class-stat-card:hover {
     transform: translateY(-3px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background: #e9ecef;
 }
 
 .class-stat-card h3 {
