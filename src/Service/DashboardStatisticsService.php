@@ -88,7 +88,7 @@ class DashboardStatisticsService
         $yearList = $this->reunionAttendsTable->find()
             ->select(['year' => 'ReunionAttends.year'])
             ->distinct()
-            ->order(['ReunionAttends.year' => 'ASC'])
+            ->orderBy(['ReunionAttends.year' => 'ASC'])
             ->toArray();
 
         $attendanceByYear = [];
@@ -163,8 +163,8 @@ class DashboardStatisticsService
                 'class' => 'Members.class',
                 'count' => 'COUNT(Members.id)'
             ])
-            ->group('Members.class')
-            ->order(['Members.class' => 'ASC'])
+            ->groupBy('Members.class')
+            ->orderBy(['Members.class' => 'ASC'])
             ->toArray();
     }
 
@@ -181,8 +181,8 @@ class DashboardStatisticsService
                 'count' => 'COUNT(Members.id)'
             ])
             ->where(['gone' => 1])
-            ->group('Members.class')
-            ->order(['Members.class' => 'ASC'])
+            ->groupBy('Members.class')
+            ->orderBy(['Members.class' => 'ASC'])
             ->toArray();
     }
 

@@ -156,12 +156,12 @@ class HomesController extends AppController
         // 指定クラスのメンバー一覧を取得
         $members = $membersTable->find()
             ->where(['class' => $class])
-            ->order(['no' => 'ASC'])
+            ->orderBy(['no' => 'ASC'])
             ->toArray();
 
         // 出欠ステータス一覧を取得
         $attendStatuses = $attendStatusesTable->find()
-            ->order(['id' => 'ASC'])
+            ->orderBy(['id' => 'ASC'])
             ->toArray();
 
         // 各メンバーの出欠状況を取得
@@ -226,7 +226,7 @@ class HomesController extends AppController
 
         // 出欠ステータス一覧を取得
         $attendStatuses = $attendStatusesTable->find()
-            ->order(['id' => 'ASC'])
+            ->orderBy(['id' => 'ASC'])
             ->toArray();
 
         // 現在の出欠状況を取得
