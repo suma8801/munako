@@ -46,7 +46,7 @@ services:
       MYSQL_CHARSET: utf8mb4
       MYSQL_COLLATION: utf8mb4_unicode_ci
     ports:
-      - "8081:80"
+      - "8082:80"
 
   composer:
     build: ./docker/app   # ← ここを変更

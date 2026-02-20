@@ -167,24 +167,24 @@ class Application extends BaseApplication
         // セッション認証器をロード
         $authenticationService->loadAuthenticator('Authentication.Session');
         
-        // フォーム認証器をロード
+        // フォーム認証器をロード（identifier を認証器に直接渡す）
         $authenticationService->loadAuthenticator('Authentication.Form', [
             'fields' => [
                 'username' => 'email',
                 'password' => 'password',
             ],
             'loginUrl' => Router::url('/users/login'),
-        ]);
-
-        // 識別子をロード
-        $authenticationService->loadIdentifier('Authentication.Password', [
-            'fields' => [
-                'username' => 'email',
-                'password' => 'password',
-            ],
-            'resolver' => [
-                'className' => 'Authentication.Orm',
-                'userModel' => 'Users',
+            'identifier' => [
+                'Authentication.Password' => [
+                    'fields' => [
+                        'username' => 'email',
+                        'password' => 'password',
+                    ],
+                    'resolver' => [
+                        'className' => 'Authentication.Orm',
+                        'userModel' => 'Users',
+                    ],
+                ],
             ],
         ]);
 
