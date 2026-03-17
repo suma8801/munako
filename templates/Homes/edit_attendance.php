@@ -46,7 +46,7 @@
                     'value' => $currentNote,
                     'label' => false,
                     'class' => 'form-control note-textarea',
-                    'rows' => 4,
+                    'rows' => 6,
                     'placeholder' => 'メモを入力してください',
                     'data-original-value' => $currentNote
                 ]) ?>

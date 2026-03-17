@@ -51,7 +51,11 @@
                                 <span class="note-text"><?= $currentNote ? h($truncatedNote) : '--' ?></span>
                             </td>
                             <td>
-                                <a href="<?= $this->Url->build(['action' => 'editAttendance', $class, $member->id]) ?>" class="btn btn-primary btn-edit-link">編集</a>
+                                <?php if ($member->gone != 1): ?>
+                                    <a href="<?= $this->Url->build(['action' => 'editAttendance', $class, $member->id]) ?>" class="btn btn-primary btn-edit-link">編集</a>
+                                <?php else: ?>
+                                    —
+                                <?php endif; ?>
                             </td>
                         </tr>
                     <?php endforeach; ?>
