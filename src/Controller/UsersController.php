@@ -32,7 +32,7 @@ class UsersController extends AppController
         parent::initialize();
         
         // 認証が必要ないアクションを設定（ミドルウェアレベルで処理）
-        $this->Authentication->allowUnauthenticated(['login', 'register','forgotPassword','resetPassword']);
+        $this->Authentication->allowUnauthenticated(['login', 'loginUser', 'loginStaff', 'register','forgotPassword','resetPassword']);
     }
 
     public function beforeFilter(\Cake\Event\EventInterface $event)
@@ -43,41 +43,45 @@ class UsersController extends AppController
 
 
     /**
-     * ログインページを表示
+     * ログインページを表示（従来の単一ログイン）
      *
      * @return \Cake\Http\Response|null
      */
     public function login()
     {
         $this->request->allowMethod(['get', 'post']);
-        
-        if ($this->request->is('post')) {
+        $this->set('loginMode', $this->request->getQuery('mode')); // 直接 /users/login で開いた場合用
 
+        if ($this->request->is('post')) {
             $result = $this->request->getAttribute('authentication')->getResult();
-            
             if ($result->isValid()) {
-                // ログイン成功後、ユーザー情報を取得
-                $user = $this->Authentication->getIdentity();
-                $userData = $user->getOriginalData();
-                
-                // ログイン成功時のリダイレクト先を決定
-                // スタッフ(2)または管理者(3)の場合はダッシュボードへ、それ以外はregacyへ
-                $roleId = $userData->role_id ?? null;
-                if (in_array((int)$roleId, [2, 3], true)) {
-                    $redirect = $this->request->getQuery('redirect', [
-                        'controller' => 'Homes',
-                        'action' => 'dashboard'
-                    ]);
-                } else {
+                $loginMode = $this->request->getData('login_mode');
+                if ($loginMode === 'user') {
+                    // 一般ログイン: ログアウトするまで常に一般として扱う
+                    $this->request->getSession()->write('Auth.loginAsGeneral', true);
                     $redirect = $this->request->getQuery('redirect', [
                         'controller' => 'Homes',
                         'action' => 'regacy'
                     ]);
+                } else {
+                    // スタッフログイン or 従来の login: DBのロールでリダイレクト先を決定
+                    $user = $this->Authentication->getIdentity();
+                    $userData = $user->getOriginalData();
+                    $roleId = (int)($userData->role_id ?? 0);
+                    if (in_array($roleId, [2, 3], true)) {
+                        $redirect = $this->request->getQuery('redirect', [
+                            'controller' => 'Homes',
+                            'action' => 'dashboard'
+                        ]);
+                    } else {
+                        $redirect = $this->request->getQuery('redirect', [
+                            'controller' => 'Homes',
+                            'action' => 'regacy'
+                        ]);
+                    }
                 }
-                
                 return $this->redirect($redirect);
             }
-            
             if ($this->request->is('ajax') || $this->request->is('json')) {
                 $this->response = $this->response->withStatus(401);
                 $this->set('error', 'ログインに失敗しました。');
@@ -85,9 +89,28 @@ class UsersController extends AppController
                 $this->viewBuilder()->setOption('serialize', ['error']);
                 return;
             }
-            
             $this->Flash->error('メールアドレスまたはパスワードが正しくありません。');
         }
+    }
+
+    /**
+     * 一般ログイン用の画面。フォームは /users/login へ POST する（認証は login で行う）。
+     */
+    public function loginUser()
+    {
+        $this->request->allowMethod(['get']);
+        $this->set('loginMode', 'user');
+        $this->viewBuilder()->setTemplate('login');
+    }
+
+    /**
+     * スタッフログイン用の画面。フォームは /users/login へ POST する（認証は login で行う）。
+     */
+    public function loginStaff()
+    {
+        $this->request->allowMethod(['get']);
+        $this->set('loginMode', 'staff');
+        $this->viewBuilder()->setTemplate('login');
     }
 
     /**
@@ -97,10 +120,11 @@ class UsersController extends AppController
      */
     public function logout(): Response
     {
+        $this->request->getSession()->delete('Auth.loginAsGeneral');
         $this->request->getAttribute('authentication')->clearIdentity($this->request, $this->response);
         $this->Flash->success('ログアウトしました。');
-        
-        return $this->redirect(['controller' => 'Users', 'action' => 'login']);
+
+        return $this->redirect(['controller' => 'Homes', 'action' => 'index']);
     }
 
     /**

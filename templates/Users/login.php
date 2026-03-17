@@ -13,7 +13,15 @@
     ?>
     <h1><?= __('ログイン') ?></h1>
     
-    <?= $this->Form->create() ?>
+    <?php
+    $formUrl = ['controller' => 'Users', 'action' => 'login'];
+    $formOptions = ['url' => $formUrl];
+    $loginMode = $loginMode ?? null;
+    ?>
+    <?= $this->Form->create(null, $formOptions) ?>
+    <?php if ($loginMode !== null && $loginMode !== ''): ?>
+        <?= $this->Form->hidden('login_mode', ['value' => $loginMode]) ?>
+    <?php endif; ?>
     <fieldset>
         <legend><?= __('ログイン情報を入力してください') ?></legend>
         <?= $this->Form->control('email', [

@@ -37,6 +37,7 @@ class DashboardStatisticsService
             'membersByClass' => $this->getMembersByClass(),
             'deceasedByClass' => $this->getDeceasedByClass(),
             'attendance2023ByClass' => $this->getAttendance2023ByClass(),
+            'attendanceNextYearByClass' => $this->getAttendanceByYearByClass((int)NEXT_YEAR),
         ];
     }
 
@@ -189,41 +190,71 @@ class DashboardStatisticsService
     /**
      * クラスごとの2023年の出席数を取得
      *
-     * @return array
+     * @return array<int, int> クラス番号 => 出席数
      */
     private function getAttendance2023ByClass(): array
     {
+        return $this->getAttendanceByYearByClass(2023);
+    }
+
+    /**
+     * 指定年のクラス別出席数を取得
+     *
+     * @param int $year 開催年
+     * @return array<int, int> クラス番号 => 出席数
+     */
+    private function getAttendanceByYearByClass(int $year): array
+    {
         $membersByClass = $this->getMembersByClass();
-        $attendance2023ByClass = [];
+        $result = [];
 
         foreach ($membersByClass as $classStat) {
             $class = $classStat->class;
-            // そのクラスのメンバーIDリストを取得
             $classMembers = $this->membersTable->find()
                 ->select(['id'])
                 ->where(['class' => $class])
                 ->toArray();
-
             $classMemberIds = array_column($classMembers, 'id');
 
-            if (!empty($classMemberIds)) {
-                // そのクラスのメンバーで2023年に出席したユニークなメンバー数
+            if ($classMemberIds !== []) {
                 $attendedMembers = $this->reunionAttendsTable->find()
                     ->where([
-                        'ReunionAttends.year' => 2023,
+                        'ReunionAttends.year' => $year,
                         'ReunionAttends.member_id IN' => $classMemberIds
                     ])
                     ->select(['member_id'])
                     ->distinct()
                     ->toArray();
-
-                $attendance2023ByClass[$class] = count($attendedMembers);
+                $result[$class] = count($attendedMembers);
             } else {
-                $attendance2023ByClass[$class] = 0;
+                $result[$class] = 0;
             }
         }
 
-        return $attendance2023ByClass;
+        return $result;
+    }
+
+    /**
+     * 指定年の参加者一覧を取得（クラス・番号順）
+     *
+     * @param int $year 開催年
+     * @param string|null $gender 性別で絞り込み 'male' 男性のみ / 'female' 女性のみ / null 全体
+     * @return \App\Model\Entity\ReunionAttend[]
+     */
+    public function getAttendeesByYear(int $year, ?string $gender = null): array
+    {
+        $query = $this->reunionAttendsTable->find()
+            ->where(['ReunionAttends.year' => $year])
+            ->contain(['Members', 'AttendStatuses'])
+            ->orderBy(['Members.class' => 'ASC', 'Members.no' => 'ASC']);
+
+        if ($gender === 'male') {
+            $query->matching('Members', fn($q) => $q->where(['Members.sex' => 1]));
+        } elseif ($gender === 'female') {
+            $query->matching('Members', fn($q) => $q->where(['Members.sex' => 0]));
+        }
+
+        return $query->toArray();
     }
 }
 

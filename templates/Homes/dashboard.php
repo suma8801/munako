@@ -55,8 +55,9 @@
     <div class="dashboard-section">
         <div class="section-header">
             <h2>開催年ごとの参加者数</h2>
+            <p class="chart-hint">※棒をクリックするとその年の参加者一覧を表示します</p>
         </div>
-        <div class="chart-container">
+        <div class="chart-container chart-clickable">
             <canvas id="attendanceChart"></canvas>
         </div>
     </div>
@@ -77,8 +78,9 @@
                         break;
                     }
                 }
-                // 2023年の出席数
+                // 2023年・次回年の出席数
                 $classAttendance2023 = $attendance2023ByClass[$classStat->class] ?? 0;
+                $classAttendanceNextYear = $attendanceNextYearByClass[$classStat->class] ?? 0;
                 ?>
                 <a href="<?= $this->Url->build(['action' => 'classAttendance', $classStat->class]) ?>" class="class-stat-card-link">
                     <div class="class-stat-card">
@@ -91,6 +93,10 @@
                             <div class="class-stat-item">
                                 <span class="class-stat-label">2023年出席</span>
                                 <span class="class-stat-value"><?= $classAttendance2023 ?>名</span>
+                            </div>
+                            <div class="class-stat-item">
+                                <span class="class-stat-label"><?= h($nextYear) ?>年出席</span>
+                                <span class="class-stat-value"><?= $classAttendanceNextYear ?>名</span>
                             </div>
                             <div class="class-stat-item">
                                 <span class="class-stat-label">物故者</span>
@@ -116,6 +122,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const maleCounts = <?= json_encode($maleCounts) ?>;
     const femaleCounts = <?= json_encode($femaleCounts) ?>;
     const totalCounts = <?= json_encode($totalCounts) ?>;
+    const attendanceByYearUrl = <?= json_encode($this->Url->build(['action' => 'attendanceByYear'], ['fullBase' => false]) . '/') ?>;
     
     new Chart(ctx, {
         type: 'bar',
@@ -176,6 +183,17 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     }
                 }
+            },
+            onClick: function(event, elements, chart) {
+                if (elements.length === 0) return;
+                var idx = elements[0].index;
+                var datasetIndex = elements[0].datasetIndex;
+                var year = years[idx];
+                if (year == null) return;
+                var url = attendanceByYearUrl + year;
+                if (datasetIndex === 0) url += '?gender=male';
+                else if (datasetIndex === 1) url += '?gender=female';
+                window.location.href = url;
             },
             scales: {
                 y: {
@@ -328,6 +346,16 @@ $this->start('css');
     position: relative;
     height: 400px;
     width: 100%;
+}
+
+.chart-clickable {
+    cursor: pointer;
+}
+
+.chart-hint {
+    color: #666;
+    font-size: 0.95rem;
+    margin: 0.5rem 0 0 0;
 }
 
 .class-stats-grid {

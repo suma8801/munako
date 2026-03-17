@@ -45,13 +45,7 @@
                         </div>
                         <h4>一般ログイン</h4>
                         <p>同窓生の皆様はこちらからログインしてください</p>
-                        <?= $this->Form->create(null, [
-                            'url' => ['controller' => 'Users', 'action' => 'login'], 
-                            'class' => 'login-form',
-                            'method' => 'get'
-                        ]) ?>
-                        <?= $this->Form->button(__('一般ログイン'), ['class' => 'button button-primary button-large']) ?>
-                        <?= $this->Form->end() ?>
+                        <?= $this->Html->link(__('一般ログイン'), ['controller' => 'Users', 'action' => 'loginUser'], ['class' => 'button button-primary button-large']) ?>
                     </div>
                     
                     <div class="login-card">
@@ -65,13 +59,7 @@
                         </div>
                         <h4>スタッフログイン</h4>
                         <p>運営スタッフの方はこちらからログインしてください</p>
-                        <?= $this->Form->create(null, [
-                            'url' => ['controller' => 'Users', 'action' => 'login'], 
-                            'class' => 'login-form',
-                            'method' => 'get'
-                        ]) ?>
-                        <?= $this->Form->button(__('スタッフログイン'), ['class' => 'button button-secondary button-large']) ?>
-                        <?= $this->Form->end() ?>
+                        <?= $this->Html->link(__('スタッフログイン'), ['controller' => 'Users', 'action' => 'loginStaff'], ['class' => 'button button-secondary button-large']) ?>
                     </div>
                 </div>
             </div>

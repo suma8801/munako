@@ -1,7 +1,9 @@
 <div class="edit-attendance-page">
     <div class="page-header">
-        <h1><?= h($member->name) ?> さんの出欠状況編集</h1>
-        <p class="page-subtitle"><?= h($class) ?>組 / <?= NEXT_YEAR ?>年度（次回同窓会）</p>
+        <div class="page-header-left">
+            <h1><?= h($member->name) ?> さんの出欠状況編集</h1>
+            <p class="page-subtitle"><?= h($class) ?>組 / <?= NEXT_YEAR ?>年度（次回同窓会）</p>
+        </div>
         <div class="header-actions">
             <a href="<?= $this->Url->build(['action' => 'classAttendance', $class]) ?>" class="btn btn-secondary btn-back">一覧に戻る</a>
         </div>
@@ -18,8 +20,10 @@
 
             <div class="form-group">
                 <?php
+                // 未選択はフォームでは -1、DB には null で保存
                 $currentStatusId = $attendance->attend_status_id ?? null;
-                $statusOptions = ['' => '-- 選択してください --'];
+                $displayStatusId = $currentStatusId !== null ? $currentStatusId : -1;
+                $statusOptions = [-1 => '-- 選択してください --'];
                 foreach ($attendStatuses as $status) {
                     $statusOptions[$status->id] = $status->name;
                 }
@@ -28,11 +32,11 @@
                 <?= $this->Form->control('attend_status_id', [
                     'type' => 'select',
                     'options' => $statusOptions,
-                    'value' => $currentStatusId,
+                    'value' => $displayStatusId,
                     'label' => false,
                     'class' => 'form-control status-select',
                     'required' => false,
-                    'data-original-value' => $currentStatusId
+                    'data-original-value' => $displayStatusId
                 ]) ?>
             </div>
 
@@ -82,6 +86,11 @@ $this->start('css');
     align-items: flex-start;
     flex-wrap: wrap;
     gap: 1rem;
+}
+
+.page-header-left {
+    flex: 1;
+    min-width: 0;
 }
 
 .page-header h1 {
@@ -180,13 +189,18 @@ $this->start('css');
 
 .note-textarea {
     resize: vertical;
-    min-height: 100px;
+    /* 約6行: 1行≈1.5rem（font 1rem × line-height 1.5）、6行で 9rem + 上下 padding 1.5rem */
+    height: 10.5rem;
+    min-height: 10.5rem;
     font-family: inherit;
+    font-size: 1rem;
     line-height: 1.5;
+    box-sizing: border-box;
 }
 
 .form-actions {
     display: flex;
+    align-items: center;
     gap: 1rem;
     margin-top: 2rem;
     padding-top: 1.5rem;
@@ -195,7 +209,15 @@ $this->start('css');
 
 .form-actions .btn {
     flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 2.75rem;
+    margin: 0;
+    padding: 0 2rem;
+    box-sizing: border-box;
     text-align: center;
+    font-size: 1rem;
 }
 
 @media (max-width: 768px) {

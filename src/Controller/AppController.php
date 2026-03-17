@@ -58,4 +58,22 @@ class AppController extends Controller
         // 全コントローラ共通で「未認証はデフォルト禁止」
         $this->Authentication->addUnauthenticatedActions([]);
     }
+
+    /**
+     * 実効ロールIDを返す。一般ログイン（loginUser）で入った場合は常に 1（一般）。
+     *
+     * @return int|null ログインしていなければ null
+     */
+    protected function getEffectiveRoleId(): ?int
+    {
+        if ($this->request->getSession()->read('Auth.loginAsGeneral')) {
+            return 1;
+        }
+        $identity = $this->request->getAttribute('authentication')?->getIdentity();
+        if ($identity === null) {
+            return null;
+        }
+        $user = $identity->getOriginalData();
+        return (int)($user->role_id ?? 0) ?: null;
+    }
 }
