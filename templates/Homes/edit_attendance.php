@@ -95,14 +95,14 @@ $this->start('css');
 
 .page-header h1 {
     color: #007cba;
-    font-size: 1.75rem;
+    font-size: 1.95rem;
     font-weight: 600;
     margin: 0;
 }
 
 .page-subtitle {
     color: #666;
-    font-size: 1rem;
+    font-size: 1.5rem;
     margin: 0.5rem 0 0 0;
 }
 
@@ -119,7 +119,7 @@ $this->start('css');
     transition: all 0.3s ease;
     border: none;
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 1.5rem;
 }
 
 .btn-secondary {
@@ -160,7 +160,7 @@ $this->start('css');
     margin-bottom: 0.5rem;
     font-weight: 600;
     color: #333;
-    font-size: 1rem;
+    font-size: 1.4rem;
 }
 
 .form-control {
@@ -168,7 +168,7 @@ $this->start('css');
     padding: 0.75rem;
     border: 1px solid #ced4da;
     border-radius: 6px;
-    font-size: 1rem;
+    font-size: 1.5rem;
     box-sizing: border-box;
 }
 
