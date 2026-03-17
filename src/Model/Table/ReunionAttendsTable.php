@@ -55,7 +55,7 @@ class ReunionAttendsTable extends Table
 
         $this->belongsTo('AttendStatuses', [
             'foreignKey' => 'attend_status_id',
-            'joinType' => 'INNER',
+            'joinType' => 'LEFT',
         ]);
     }
 
@@ -79,8 +79,7 @@ class ReunionAttendsTable extends Table
 
         $validator
             ->integer('attend_status_id')
-            ->requirePresence('attend_status_id', 'create')
-            ->notEmptyString('attend_status_id');
+            ->allowEmptyString('attend_status_id');
 
         $validator
             ->scalar('note')
@@ -99,7 +98,10 @@ class ReunionAttendsTable extends Table
     public function buildRules(RulesChecker $rules): RulesChecker
     {
         $rules->add($rules->existsIn(['member_id'], 'Members'), ['errorField' => 'member_id']);
-        $rules->add($rules->existsIn(['attend_status_id'], 'AttendStatuses'), ['errorField' => 'attend_status_id']);
+        $rules->add(
+            $rules->existsIn(['attend_status_id'], 'AttendStatuses', ['allowNullableNulls' => true]),
+            ['errorField' => 'attend_status_id']
+        );
 
         return $rules;
     }

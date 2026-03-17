@@ -11,7 +11,7 @@ use Cake\ORM\Entity;
  * @property int $id
  * @property int $year
  * @property int $member_id
- * @property int $attend_status_id
+ * @property int|null $attend_status_id
  * @property string|null $note
  * @property \Cake\I18n\DateTime $created
  * @property \Cake\I18n\DateTime $modified
@@ -40,5 +40,20 @@ class ReunionAttend extends Entity
         'member' => true,
         'attend_status' => true,
     ];
+
+    /**
+     * 出欠ステータスID: 未選択（-1 or 空）を null に正規化してDBに保存
+     *
+     * @param int|string|null $value
+     * @return int|null
+     */
+    protected function _setAttendStatusId($value): ?int
+    {
+        $int = $value === null || $value === '' ? null : (int)$value;
+        if ($int === null || $int === -1) {
+            return null;
+        }
+        return $int;
+    }
 }
 

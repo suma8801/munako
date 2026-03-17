@@ -10,7 +10,7 @@ CREATE TABLE `reunion_attends` (
   `id` int NOT NULL AUTO_INCREMENT COMMENT 'プライマリーキー（自動採番）',
   `year` int NOT NULL COMMENT '開催年',
   `member_id` int NOT NULL COMMENT 'メンバーID',
-  `attend_status_id` int NOT NULL COMMENT '出欠ステータスID',
+  `attend_status_id` int NULL COMMENT '出欠ステータスID',
   `note` text COMMENT 'メモ',
   `created` datetime NOT NULL COMMENT '作成日時',
   `modified` datetime NOT NULL COMMENT '更新日時',
