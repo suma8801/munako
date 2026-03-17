@@ -181,14 +181,14 @@ $this->start('css');
     font-weight: 600;
     color: #333;
     border-bottom: 2px solid #dee2e6;
-    font-size: 1.3rem;
+    font-size: 1.5rem;
 }
 
 .attendance-table td {
     padding: 1rem;
     border-bottom: 1px solid #e9ecef;
     vertical-align: middle;
-    font-size: 1.3rem;
+    font-size: 1.5rem;
 }
 
 .attendance-table tbody tr:hover {

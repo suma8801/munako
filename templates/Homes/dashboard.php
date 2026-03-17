@@ -238,7 +238,7 @@ $this->start('css');
 
 .dashboard-subtitle {
     color: #666;
-    font-size: 1.1rem;
+    font-size: 1.7rem;
 }
 
 .stats-grid {
@@ -282,7 +282,7 @@ $this->start('css');
 
 .stat-card-content h3 {
     color: #333;
-    font-size: 1rem;
+    font-size: 1.5rem;
     font-weight: 500;
     margin-bottom: 0.5rem;
 }
@@ -359,7 +359,7 @@ $this->start('css');
 
 .class-stat-card h3 {
     color: #007cba;
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     font-weight: 600;
     margin-bottom: 1rem;
     text-align: center;
@@ -382,13 +382,13 @@ $this->start('css');
 
 .class-stat-label {
     color: #666;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     font-weight: 500;
 }
 
 .class-stat-value {
     color: #333;
-    font-size: 1.1rem;
+    font-size: 1.3rem;
     font-weight: 600;
 }
 
