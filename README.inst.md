@@ -45,6 +45,7 @@ cd ..
 ## 3.依存パッケージのインストール
 
 CakePHP の依存パッケージを Docker 上でインストールします。
+**app コンテナの初回起動時に、`vendor` が無い場合は自動で `composer install` が実行されます。**  
 ```bash
 docker compose run --rm app composer install
 ```
