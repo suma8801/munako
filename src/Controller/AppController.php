@@ -59,6 +59,19 @@ class AppController extends Controller
         $this->Authentication->addUnauthenticatedActions([]);
     }
 
+    public function beforeRender(
+        \Cake\Event\EventInterface $event
+    ): void {
+        parent::beforeRender($event);
+
+        $identity = $this->request->getAttribute('authentication')?->getIdentity();
+        if ($identity) {
+            $this->viewBuilder()->setLayout('logged_in');
+        } else {
+            $this->viewBuilder()->setLayout('logged_out');
+        }
+    }
+
     /**
      * 実効ロールIDを返す。一般ログイン（loginUser）で入った場合は常に 1（一般）。
      *

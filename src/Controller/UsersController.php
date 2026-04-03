@@ -135,6 +135,12 @@ class UsersController extends AppController
      */
     public function register()
     {
+        $currentUser = $this->Authentication->getIdentity();
+        if (!$currentUser || !in_array($currentUser->role_id, [2, 3])) {
+            $this->Flash->error('このページにアクセスする権限がありません。');
+            return $this->redirect(['controller' => 'Homes', 'action' => 'index']);
+        }
+
         $this->request->allowMethod(['get', 'post']);
 
         // 既存管理者の有無を確認（role_id=3 を管理者とする）

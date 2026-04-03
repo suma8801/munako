@@ -74,9 +74,11 @@
                         <li class="nav-item">
                             <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'login']) ?>" class="nav-link">ログイン</a>
                         </li>
-                        <li class="nav-item">
-                            <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'register']) ?>" class="nav-link">新規登録</a>
-                        </li>
+                        <?php if (isset($currentUser) && in_array($currentUser->role_id, [2, 3])): ?>
+                            <li class="nav-item">
+                                <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'register']) ?>" class="nav-link">新規登録</a>
+                            </li>
+                        <?php endif; ?>
                     </ul>
                     <button class="navbar-toggle" aria-label="メニューを開く">
                         <span></span>
