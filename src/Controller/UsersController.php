@@ -32,7 +32,7 @@ class UsersController extends AppController
         parent::initialize();
         
         // 認証が必要ないアクションを設定（ミドルウェアレベルで処理）
-        $this->Authentication->allowUnauthenticated(['login', 'loginUser', 'loginStaff', 'register','forgotPassword','resetPassword']);
+        $this->Authentication->allowUnauthenticated(['login', 'loginUser', 'loginStaff', 'register','forgotPassword','resetPassword', 'registerUser']);
     }
 
     public function beforeFilter(\Cake\Event\EventInterface $event)
@@ -413,5 +413,26 @@ class UsersController extends AppController
 
         // 新しいパスワードがPOSTされていない時
         $this->set(compact('token'));
+    }
+
+    /**
+     * 一般ユーザー登録ページ
+     *
+     * @return \Cake\Http\Response|null|void
+     */
+    public function registerUser()
+    {
+        if ($this->request->is('post')) {
+            $user = $this->Users->newEmptyEntity();
+            $user = $this->Users->patchEntity($user, $this->request->getData());
+
+            if ($this->Users->save($user)) {
+                $this->Flash->success(__('登録が完了しました。ログインしてください。'));
+                return $this->redirect(['action' => 'loginUser']);
+            }
+            $this->Flash->error(__('登録に失敗しました。もう一度お試しください。'));
+        }
+
+        $this->set('title', '新規登録');
     }
 }

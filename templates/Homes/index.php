@@ -61,6 +61,18 @@
                         <p>運営スタッフの方はこちらからログインしてください</p>
                         <?= $this->Html->link(__('スタッフログイン'), ['controller' => 'Users', 'action' => 'loginStaff'], ['class' => 'button button-secondary button-large']) ?>
                     </div>
+                    <div class="login-card">
+                        <div class="card-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2a10 10 0 1 1-10 10A10 10 0 0 1 12 2z"></path>
+                                <line x1="12" y1="6" x2="12" y2="12"></line>
+                                <line x1="12" y1="16" x2="12" y2="16"></line>
+                            </svg>
+                        </div>
+                        <h4>新規登録</h4>
+                        <p>初めての方はこちらから登録してください</p>
+                        <?= $this->Html->link(__('新規登録'), ['controller' => 'Users', 'action' => 'registerUser'], ['class' => 'button button-primary button-large']) ?>
+                    </div>
                 </div>
             </div>
         </div>

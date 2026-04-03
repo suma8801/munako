@@ -15,50 +15,13 @@
         
         <div class="form-row">
             <div class="form-group">
-                <?= $this->Form->control('email', [
-                    'label' => 'メールアドレス',
-                    'type' => 'email',
-                    'required' => true,
-                    'placeholder' => 'example@example.com',
-                    'help' => 'ログイン時に使用するメールアドレスを入力してください',
-                    'class' => 'form-control'
-                ]) ?>
+                <?= $this->Form->control('email', ['label' => 'メールアドレス', 'required' => true, 'class' => 'form-control']) ?>
             </div>
         </div>
         
         <div class="form-row">
             <div class="form-group">
-                <?= $this->Form->control('name', [
-                    'label' => '氏名',
-                    'type' => 'text',
-                    'required' => true,
-                    'placeholder' => '山田太郎',
-                    'help' => 'フルネームを入力してください',
-                    'class' => 'form-control'
-                ]) ?>
-            </div>
-            <div class="form-group">
-                <?= $this->Form->control('yomi', [
-                    'label' => 'よみがな',
-                    'type' => 'text',
-                    'required' => true,
-                    'placeholder' => 'やまだたろう',
-                    'help' => 'ひらがなでよみがなを入力してください',
-                    'class' => 'form-control'
-                ]) ?>
-            </div>
-        </div>
-        
-        <div class="form-row">
-            <div class="form-group">
-                <?= $this->Form->control('password', [
-                    'label' => 'パスワード',
-                    'type' => 'password',
-                    'required' => true,
-                    'placeholder' => '8文字以上で入力',
-                    'help' => '8文字以上の英数字を入力してください',
-                    'class' => 'form-control'
-                ]) ?>
+                <?= $this->Form->control('password', ['label' => 'パスワード', 'required' => true, 'class' => 'form-control']) ?>
             </div>
             <div class="form-group">
                 <?= $this->Form->control('password_confirm', [
@@ -113,3 +76,11 @@
     
     <?= $this->Form->end() ?>
 </div>
+
+<div class="oauth-options">
+        <h3>または、以下のサービスを使用して登録</h3>
+        <div class="oauth-buttons">
+            <button class="button button-google">Googleで登録</button>
+            <button class="button button-facebook">Facebookで登録</button>
+        </div>
+    </div>
