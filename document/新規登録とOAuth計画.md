@@ -20,23 +20,18 @@
 ---
 
 #### フェーズ 2: `homes/index`のOAuth対応
-1. **OAuthプラグインのインストール**:
-   - Composerを使用してCakePHP互換のOAuthプラグイン（例: `league/oauth2-client`）を追加。
-   - [composer.json](composer.json)を更新し、`composer install`を実行。
+1. **OAuthプラグインのインストール**（実施済み）:
+   - 基底: [`league/oauth2-client`](https://packagist.org/packages/league/oauth2-client)
+   - Google: [`league/oauth2-google`](https://packagist.org/packages/league/oauth2-google)
+   - Apple: [`patrickbussmann/oauth2-apple`](https://packagist.org/packages/patrickbussmann/oauth2-apple)（`League\OAuth2\Client\Provider\Apple`）
+   - LINE: [`gn-office/oauth2-line`](https://packagist.org/packages/gn-office/oauth2-line)
+   - X（Twitter）: [`aporat/oauth2-xtwitter`](https://packagist.org/packages/aporat/oauth2-xtwitter)
+   - Docker 利用時: `docker compose run --rm composer install` で `composer.lock` と同期。
 
 2. **OAuthプロバイダーの設定**:
-   - [config/app_local.php](config/app_local.php)にGoogle、Apple、X（Twitter）、LINEの設定を追加。
-   - 設定例:
-     ```php
-     'OAuth' => [
-         'Google' => [
-             'clientId' => 'your-client-id',
-             'clientSecret' => 'your-client-secret',
-             'redirectUri' => 'https://your-app.com/oauth/google/callback',
-         ],
-         ...
-     ],
-     ```
+   - [config/app_local.example.php](config/app_local.example.php) に `OAuth` キー（Google / Apple / X / LINE）を追加済み。ローカルは [config/app_local.php](config/app_local.php) に同様のブロックを置き、値は環境変数（`OAUTH_*`）で渡す。
+   - Apple は `clientId` に加え `teamId`・`keyFileId`・`keyFilePath`（`.p8` の絶対パス）が必要（Sign in with Apple）。
+   - 変数名の一覧は `config/.env.example` の OAuth セクション（コメント）を参照。
 
 3. **OAuthコントローラーの作成**:
    - OAuthフローを処理する`OAuthController`を追加。

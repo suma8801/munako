@@ -94,4 +94,40 @@ return [
             'url' => env('EMAIL_TRANSPORT_DEFAULT_URL', null),
         ],
     ],
+
+    /*
+     * OAuth 2.0（フェーズ２）
+     *
+     * 認証情報は .env / 環境変数で渡すこと。redirectUri は各プロバイダーの開発者コンソールに登録した URL と一致させる。
+     * 使用パッケージ: league/oauth2-client, league/oauth2-google, patrickbussmann/oauth2-apple,
+     * gn-office/oauth2-line, aporat/oauth2-xtwitter
+     */
+    'OAuth' => [
+        'Google' => [
+            'enabled' => filter_var(env('OAUTH_GOOGLE_ENABLED', false), FILTER_VALIDATE_BOOLEAN),
+            'clientId' => env('OAUTH_GOOGLE_CLIENT_ID', ''),
+            'clientSecret' => env('OAUTH_GOOGLE_CLIENT_SECRET', ''),
+            'redirectUri' => env('OAUTH_GOOGLE_REDIRECT_URI', ''),
+        ],
+        'Apple' => [
+            'enabled' => filter_var(env('OAUTH_APPLE_ENABLED', false), FILTER_VALIDATE_BOOLEAN),
+            'clientId' => env('OAUTH_APPLE_CLIENT_ID', ''),
+            'teamId' => env('OAUTH_APPLE_TEAM_ID', ''),
+            'keyFileId' => env('OAUTH_APPLE_KEY_FILE_ID', ''),
+            'keyFilePath' => env('OAUTH_APPLE_KEY_FILE_PATH', ''),
+            'redirectUri' => env('OAUTH_APPLE_REDIRECT_URI', ''),
+        ],
+        'X' => [
+            'enabled' => filter_var(env('OAUTH_X_ENABLED', false), FILTER_VALIDATE_BOOLEAN),
+            'clientId' => env('OAUTH_X_CLIENT_ID', ''),
+            'clientSecret' => env('OAUTH_X_CLIENT_SECRET', ''),
+            'redirectUri' => env('OAUTH_X_REDIRECT_URI', ''),
+        ],
+        'Line' => [
+            'enabled' => filter_var(env('OAUTH_LINE_ENABLED', false), FILTER_VALIDATE_BOOLEAN),
+            'clientId' => env('OAUTH_LINE_CHANNEL_ID', ''),
+            'clientSecret' => env('OAUTH_LINE_CHANNEL_SECRET', ''),
+            'redirectUri' => env('OAUTH_LINE_REDIRECT_URI', ''),
+        ],
+    ],
 ];
