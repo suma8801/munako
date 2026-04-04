@@ -1529,6 +1529,172 @@ html {
     margin: 0 auto;
 }
 
+/* ホーム — OAuth ログイン */
+.home-page .oauth-login-block {
+    margin-top: 2.5rem;
+    padding-top: 0.5rem;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.home-page .oauth-login-divider {
+    text-align: center;
+    color: #888;
+    font-size: 0.95rem;
+    margin: 0 0 0.75rem;
+    position: relative;
+}
+
+.home-page .oauth-login-divider span {
+    background: #f8f9fa;
+    padding: 0 1rem;
+    position: relative;
+    z-index: 1;
+}
+
+.home-page .oauth-login-divider::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 1px;
+    background: #dee2e6;
+    z-index: 0;
+}
+
+.home-page .oauth-login-lead {
+    text-align: center;
+    color: #555;
+    font-size: 0.95rem;
+    margin: 0 0 1.25rem;
+    line-height: 1.5;
+}
+
+.home-page .oauth-button-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: stretch;
+}
+
+.home-page .oauth-button-list li {
+    margin: 0;
+}
+
+.home-page .oauth-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 3rem;
+    padding: 0.65rem 1.25rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+    box-sizing: border-box;
+    border: 1px solid transparent;
+}
+
+.home-page .oauth-button:hover {
+    text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.home-page .oauth-button:focus-visible {
+    outline: 2px solid #007cba;
+    outline-offset: 2px;
+}
+
+.home-page .oauth-button__inner {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.65rem;
+}
+
+.home-page .oauth-button__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.home-page .oauth-button__line-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.25rem;
+    height: 1.5rem;
+    padding: 0 0.35rem;
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    border-radius: 4px;
+    background: #fff;
+    color: #06c755;
+}
+
+.home-page .oauth-button--google {
+    background: #fff;
+    color: #3c4043;
+    border-color: #dadce0;
+}
+
+.home-page .oauth-button--google:hover {
+    background: #f8f9fa;
+    color: #3c4043;
+}
+
+.home-page .oauth-button--apple {
+    background: #000;
+    color: #fff;
+    border-color: #000;
+}
+
+.home-page .oauth-button--apple:hover {
+    background: #222;
+    color: #fff;
+}
+
+.home-page .oauth-button--apple .oauth-button__icon {
+    color: #fff;
+}
+
+.home-page .oauth-button--x {
+    background: #000;
+    color: #fff;
+    border-color: #000;
+}
+
+.home-page .oauth-button--x:hover {
+    background: #222;
+    color: #fff;
+}
+
+.home-page .oauth-button--line {
+    background: #06c755;
+    color: #fff;
+    border-color: #05b34c;
+}
+
+.home-page .oauth-button--line:hover {
+    background: #05b34c;
+    color: #fff;
+}
+
+.home-page .oauth-button--line .oauth-button__line-mark {
+    background: rgba(255, 255, 255, 0.95);
+}
+
 /* ========================================
    ホームページ - 機能セクション
    ======================================== */

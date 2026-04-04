@@ -33,6 +33,7 @@
                 <p>昭和56年卒業生の皆様、お疲れ様です。このサイトでは、同窓生の皆様との交流や情報共有ができます。</p>
             </div>
             
+            <?php if (empty($currentUser)): ?>
             <div class="login-options">
                 <h3>ログイン方法を選択してください</h3>
                 <div class="login-cards">
@@ -70,11 +71,36 @@
                             </svg>
                         </div>
                         <h4>新規登録</h4>
-                        <p>初めての方はこちらから登録してください</p>
+                        <p>初めての方はこちらから登録してください（メールアドレス）</p>
                         <?= $this->Html->link(__('新規登録'), ['controller' => 'Users', 'action' => 'registerUser'], ['class' => 'button button-primary button-large']) ?>
                     </div>
                 </div>
+
+                <?php if (!empty($oauthLoginProviders)): ?>
+                <div class="oauth-login-block" role="region" aria-label="<?= h(__('SNS・外部アカウントでログイン')) ?>">
+                    <p class="oauth-login-divider"><span><?= h(__('または')) ?></span></p>
+                    <p class="oauth-login-lead"><?= h(__('連携済みのアカウントでログイン・新規登録')) ?></p>
+                    <ul class="oauth-button-list">
+                        <?php foreach ($oauthLoginProviders as $p) :
+                            $slug = $p['slug'];
+                            ?>
+                        <li>
+                            <?= $this->Html->link(
+                                $this->element('oauth_button_inner', ['slug' => $slug, 'buttonText' => $p['buttonText']]),
+                                ['controller' => 'OAuth', 'action' => 'login', $slug],
+                                [
+                                    'class' => 'oauth-button oauth-button--' . h($slug),
+                                    'escape' => false,
+                                    'rel' => 'nofollow',
+                                ]
+                            ) ?>
+                        </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+                <?php endif; ?>
             </div>
+            <?php endif; ?>
         </div>
     </div>
 
