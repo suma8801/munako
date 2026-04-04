@@ -32,6 +32,9 @@ use Authentication\PasswordHasher\DefaultPasswordHasher;
  */
 class UsersTable extends Table
 {
+    /** 一般ユーザー（メール新規登録 registerUser 用） */
+    public const ROLE_ID_GENERAL = 1;
+
     /**
      * Initialize method
      *
@@ -82,8 +85,17 @@ class UsersTable extends Table
         $validator
             ->scalar('password')
             ->maxLength('password', 255)
-            ->requirePresence('password', 'create')
-            ->notEmptyString('password');
+            ->allowEmptyString('password');
+
+        $validator
+            ->scalar('oauth_provider')
+            ->maxLength('oauth_provider', 32)
+            ->allowEmptyString('oauth_provider');
+
+        $validator
+            ->scalar('oauth_subject')
+            ->maxLength('oauth_subject', 255)
+            ->allowEmptyString('oauth_subject');
 
         $validator
             ->integer('role_id')
@@ -102,6 +114,109 @@ class UsersTable extends Table
     }
 
     /**
+     * /users/register-user フォーム送信時（メール・パスワードのみ）
+     *
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return \Cake\Validation\Validator
+     */
+    public function validationRegisterUserInput(Validator $validator): Validator
+    {
+        $validator
+            ->email('email')
+            ->requirePresence('email', 'create')
+            ->notEmptyString('email');
+
+        $validator
+            ->scalar('password')
+            ->maxLength('password', 255)
+            ->requirePresence('password', 'create')
+            ->notEmptyString('password');
+
+        return $validator;
+    }
+
+    /**
+     * メールによる一般ユーザー新規登録の保存直前（name/yomi/role 込み）
+     *
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return \Cake\Validation\Validator
+     */
+    public function validationRegisterUser(Validator $validator): Validator
+    {
+        $validator
+            ->email('email')
+            ->requirePresence('email', 'create')
+            ->notEmptyString('email');
+
+        $validator
+            ->scalar('password')
+            ->maxLength('password', 255)
+            ->allowEmptyString('password');
+
+        $validator
+            ->scalar('name')
+            ->maxLength('name', 255)
+            ->requirePresence('name', 'create')
+            ->notEmptyString('name');
+
+        $validator
+            ->scalar('yomi')
+            ->maxLength('yomi', 255)
+            ->requirePresence('yomi', 'create')
+            ->notEmptyString('yomi');
+
+        $validator
+            ->integer('role_id')
+            ->requirePresence('role_id', 'create')
+            ->notEmptyString('role_id');
+
+        $validator
+            ->scalar('oauth_provider')
+            ->maxLength('oauth_provider', 32)
+            ->allowEmptyString('oauth_provider');
+
+        $validator
+            ->scalar('oauth_subject')
+            ->maxLength('oauth_subject', 255)
+            ->allowEmptyString('oauth_subject');
+
+        return $validator;
+    }
+
+    /**
+     * メール新規登録で name / yomi が空のとき、メールローカル部またはプレースホルダで埋める
+     *
+     * @param \App\Model\Entity\User $user User entity
+     * @return void
+     */
+    public function applyRegisterUserDisplayDefaults(\App\Model\Entity\User $user): void
+    {
+        $email = (string)$user->get('email');
+        $local = '';
+        if ($email !== '' && str_contains($email, '@')) {
+            $at = mb_strpos($email, '@');
+            if ($at !== false) {
+                $local = mb_substr($email, 0, $at);
+            }
+        }
+        $local = $local !== '' ? mb_substr($local, 0, 255) : '';
+
+        $name = $user->get('name');
+        if ($name === null || $name === '') {
+            $user->set('name', $local !== '' ? $local : __('ユーザー'));
+        } else {
+            $user->set('name', mb_substr((string)$name, 0, 255));
+        }
+
+        $yomi = $user->get('yomi');
+        if ($yomi === null || $yomi === '') {
+            $user->set('yomi', $local !== '' ? $local : __('ゆーざー'));
+        } else {
+            $user->set('yomi', mb_substr((string)$yomi, 0, 255));
+        }
+    }
+
+    /**
      * Returns a rules checker object that will be used for validating
      * application integrity.
      *
@@ -112,6 +227,41 @@ class UsersTable extends Table
     {
         $rules->add($rules->isUnique(['email']), ['errorField' => 'email']);
         $rules->add($rules->existsIn(['role_id'], 'Roles'), ['errorField' => 'role_id']);
+
+        $rules->add(function ($entity, $options) {
+            $provider = $entity->get('oauth_provider');
+            $subject = $entity->get('oauth_subject');
+            if ($provider === null || $provider === '' || $subject === null || $subject === '') {
+                return true;
+            }
+            $query = $this->find()
+                ->where([
+                    'oauth_provider' => $provider,
+                    'oauth_subject' => $subject,
+                ]);
+            if (!$entity->isNew() && $entity->get('id')) {
+                $query->where(['id !=' => $entity->get('id')]);
+            }
+            return !$query->count();
+        }, 'oauthUnique', [
+            'errorField' => 'oauth_subject',
+            'message' => 'このOAuthアカウントは既に登録されています。',
+        ]);
+
+        $rules->add(function ($entity, $options) {
+            $hasOAuth = !empty($entity->get('oauth_provider')) && !empty($entity->get('oauth_subject'));
+            if ($hasOAuth) {
+                return true;
+            }
+            if (!$entity->isNew()) {
+                return true;
+            }
+            $password = $entity->get('password');
+            return $password !== null && $password !== '';
+        }, 'passwordOrOauth', [
+            'errorField' => 'password',
+            'message' => 'パスワードを入力するか、OAuthで登録してください。',
+        ]);
 
         return $rules;
     }
@@ -126,7 +276,11 @@ class UsersTable extends Table
     public function findAuth(\Cake\ORM\Query $query, array $options)
     {
         $query
-            ->select(['id', 'email', 'name', 'yomi', 'password', 'role_id', 'token', 'token_expire', 'created'])
+            ->select([
+                'id', 'email', 'name', 'yomi', 'password',
+                'oauth_provider', 'oauth_subject',
+                'role_id', 'token', 'token_expire', 'created',
+            ])
             ->where(['Users.email' => $options['username']]);
 
         return $query;
@@ -139,8 +293,11 @@ class UsersTable extends Table
      * @param string $hashedPassword ハッシュ化されたパスワード
      * @return bool パスワードが正しい場合true
      */
-    public function verifyPassword(string $password, string $hashedPassword): bool
+    public function verifyPassword(string $password, ?string $hashedPassword): bool
     {
+        if ($hashedPassword === null || $hashedPassword === '') {
+            return false;
+        }
         $hasher = new DefaultPasswordHasher();
         return $hasher->check($password, $hashedPassword);
     }

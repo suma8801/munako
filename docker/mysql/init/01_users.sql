@@ -10,12 +10,15 @@ CREATE TABLE `users` (
   `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'ログイン名（mail)',
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '名前',
   `yomi` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'よみがな',
-  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'パスワードのハッシュ値',
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'パスワードのハッシュ値（NULLはOAuth専用ユーザー）',
+  `oauth_provider` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'OAuthプロバイダー識別子（google,line,apple,x,facebook,instagram 等）',
+  `oauth_subject` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'プロバイダー発行のユーザー一意ID（sub 等）',
   `role_id` int NOT NULL COMMENT 'ロールテーブルのid',
   `token` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'パスワード忘れのトークン',
   `token_expire` datetime DEFAULT NULL COMMENT 'トークンの期限',
   `created` datetime NOT NULL COMMENT 'ユーザーの利用開始',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `users_oauth_provider_subject` (`oauth_provider`,`oauth_subject`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='ユーザーテーブル';
 
 

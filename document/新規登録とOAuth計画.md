@@ -100,6 +100,24 @@
 
 ---
 
+### **users テーブル（フェーズ２向けスキーマ）**
+- `docker/mysql/init/01_users.sql` に以下を反映済み。
+  - `password` … NULL 許可（OAuth 専用ユーザーはパスワードなし）
+  - `oauth_provider` … `varchar(32)` NULL（例: `google`, `line`, `apple`, `x`）
+  - `oauth_subject` … `varchar(255)` NULL（プロバイダー側の一意 ID）
+  - 複合 UNIQUE `users_oauth_provider_subject`（`oauth_provider` + `oauth_subject`）
+- CakePHP: `User` エンティティ・`UsersTable`（バリデーション・ルール・`findAuth` 選択列）を同期。
+
+**既存 DB をボリュームで継続している場合**（新規 `01_users.sql` が再実行されないとき）は、手動で例えば次を実行する。
+
+```sql
+ALTER TABLE `users`
+  MODIFY `password` varchar(255) NULL COMMENT 'パスワードのハッシュ値（NULLはOAuth専用ユーザー）',
+  ADD COLUMN `oauth_provider` varchar(32) NULL COMMENT 'OAuthプロバイダー識別子' AFTER `password`,
+  ADD COLUMN `oauth_subject` varchar(255) NULL COMMENT 'プロバイダー発行のユーザー一意ID' AFTER `oauth_provider`,
+  ADD UNIQUE KEY `users_oauth_provider_subject` (`oauth_provider`, `oauth_subject`);
+```
+
 ### **追加検討事項**
 1. **OAuthユーザーマッピング**:
    - OAuthユーザーを既存ロールにどのようにマッピングするかを決定（例: デフォルトで一般ユーザー）。

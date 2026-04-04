@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Controller\AppController;
+use App\Model\Table\UsersTable;
 use App\Service\ResetService;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Http\Response;
@@ -135,8 +136,8 @@ class UsersController extends AppController
      */
     public function register()
     {
-        $currentUser = $this->Authentication->getIdentity();
-        if (!$currentUser || !in_array($currentUser->role_id, [2, 3])) {
+        $effectiveRoleId = $this->getEffectiveRoleId();
+        if ($effectiveRoleId === null || !in_array($effectiveRoleId, [2, 3], true)) {
             $this->Flash->error('このページにアクセスする権限がありません。');
             return $this->redirect(['controller' => 'Homes', 'action' => 'index']);
         }
@@ -422,17 +423,28 @@ class UsersController extends AppController
      */
     public function registerUser()
     {
-        if ($this->request->is('post')) {
-            $user = $this->Users->newEmptyEntity();
-            $user = $this->Users->patchEntity($user, $this->request->getData());
+        $user = $this->Users->newEmptyEntity();
 
-            if ($this->Users->save($user)) {
-                $this->Flash->success(__('登録が完了しました。ログインしてください。'));
-                return $this->redirect(['action' => 'loginUser']);
+        if ($this->request->is('post')) {
+            $user = $this->Users->patchEntity($user, $this->request->getData(), [
+                'validate' => 'registerUserInput',
+            ]);
+
+            if ($user->getErrors()) {
+                $this->Flash->error(__('入力内容を確認してください。'));
+            } else {
+                $user->role_id = UsersTable::ROLE_ID_GENERAL;
+                $this->Users->applyRegisterUserDisplayDefaults($user);
+
+                if ($this->Users->save($user, ['validate' => 'registerUser'])) {
+                    $this->Flash->success(__('登録が完了しました。ログインしてください。'));
+                    return $this->redirect(['action' => 'loginUser']);
+                }
+                $this->Flash->error(__('登録に失敗しました。もう一度お試しください。'));
             }
-            $this->Flash->error(__('登録に失敗しました。もう一度お試しください。'));
         }
 
+        $this->set(compact('user'));
         $this->set('title', '新規登録');
     }
 }

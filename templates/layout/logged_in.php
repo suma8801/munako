@@ -34,6 +34,14 @@
                         <li class="nav-item">
                             <a href="<?= $this->Url->build(['controller' => 'Homes', 'action' => 'index']) ?>" class="nav-link">ホーム</a>
                         </li>
+                        <?php
+                        $effectiveRoleId = $effectiveRoleId ?? null;
+                        if ($effectiveRoleId !== null && in_array($effectiveRoleId, [2, 3], true)):
+                        ?>
+                            <li class="nav-item">
+                                <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'register']) ?>" class="nav-link"><?= __('新規登録') ?></a>
+                            </li>
+                        <?php endif; ?>
                         <li class="nav-item">
                             <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'logout']) ?>" class="nav-link">ログアウト</a>
                         </li>
@@ -61,8 +69,9 @@
                     <h4>リンク</h4>
                     <ul class="footer-links">
                         <li><a href="<?= $this->Url->build(['controller' => 'Homes', 'action' => 'index']) ?>">ホーム</a></li>
-                        <li><a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'login']) ?>">ログイン</a></li>
-                        <li><a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'register']) ?>">新規登録</a></li>
+                        <?php if ($effectiveRoleId !== null && in_array($effectiveRoleId, [2, 3], true)): ?>
+                            <li><a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'register']) ?>"><?= __('新規登録') ?></a></li>
+                        <?php endif; ?>
                     </ul>
                 </div>
                 <div class="footer-section">

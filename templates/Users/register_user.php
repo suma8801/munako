@@ -67,7 +67,7 @@
         <span><?= __('または') ?></span>
     </div>
 
-    <?= $this->Form->create(null, ['class' => 'register-form']) ?>
+    <?= $this->Form->create($user, ['class' => 'register-form']) ?>
     <fieldset class="register-email-fieldset">
         <legend class="register-email-legend"><?= __('メールアドレスで登録') ?></legend>
 

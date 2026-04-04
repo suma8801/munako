@@ -13,7 +13,9 @@ use Authentication\PasswordHasher\DefaultPasswordHasher;
  * @property string $email
  * @property string $name
  * @property string $yomi
- * @property string $password
+ * @property string|null $password
+ * @property string|null $oauth_provider
+ * @property string|null $oauth_subject
  * @property int $role_id
  * @property string|null $token
  * @property \Cake\I18n\DateTime|null $token_expire
@@ -37,6 +39,8 @@ class User extends Entity
         'name' => true,
         'yomi' => true,
         'password' => true,
+        'oauth_provider' => true,
+        'oauth_subject' => true,
         'role_id' => true,
         'token' => true,
         'token_expire' => true,
@@ -54,13 +58,16 @@ class User extends Entity
     ];
 
     /**
-     * パスワードをハッシュ化する
+     * パスワードをハッシュ化する（OAuth 専用ユーザーは null / 空のまま）
      *
-     * @param string $password 平文パスワード
-     * @return string ハッシュ化されたパスワード
+     * @param string|null $password 平文パスワード
+     * @return string|null ハッシュ化されたパスワード
      */
-    protected function _setPassword(string $password): string
+    protected function _setPassword(?string $password): ?string
     {
+        if ($password === null || $password === '') {
+            return null;
+        }
         $hasher = new DefaultPasswordHasher();
         return $hasher->hash($password);
     }

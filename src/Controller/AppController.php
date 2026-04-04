@@ -65,8 +65,10 @@ class AppController extends Controller
         parent::beforeRender($event);
 
         $identity = $this->request->getAttribute('authentication')?->getIdentity();
+        $this->set('effectiveRoleId', $this->getEffectiveRoleId());
         if ($identity) {
             $this->viewBuilder()->setLayout('logged_in');
+            $this->set('currentUser', $identity->getOriginalData());
         } else {
             $this->viewBuilder()->setLayout('logged_out');
         }
