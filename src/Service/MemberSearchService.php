@@ -4,72 +4,53 @@ namespace App\Service;
 
 use App\Model\Table\MembersTable;
 use Cake\ORM\TableRegistry;
-use Cake\Datasource\Exception\RecordNotFoundException;
 
 // メンバー検索サービス
 class MemberSearchService
 {
     // メンバーテーブル
-    private $membersTable;
+    private MembersTable $membersTable;
 
     public function __construct()
     {
-        $this->membersTable  = TableRegistry::getTableLocator()->get('Members');
+        $this->membersTable = TableRegistry::getTableLocator()->get('Members');
     }
 
     // メンバーを検索する
     public function searchMembers($param): array
     {
-        if( $param == '' ) {
-            $results = $this->membersTable->find('all', [
-                'conditions' => ['class' => 1 ],
-                'order' => 'id asc',
-                'contain' => ['ReunionAttends']
-            ]);
+        $query = $this->membersTable->find()
+            ->orderBy(['Members.id' => 'ASC'])
+            ->contain(['ReunionAttends']);
 
-            return $results->toArray();
-        }  
+        if ($param === '') {
+            $query->where(['class' => 1]);
+
+            return $query->toArray();
+        }
 
         // 数字ならば
-        if( is_numeric( $param ) ){
-            if( $param == -1 ) {
-    
-                //物故者
-                $results = $this->membersTable->find('all', [
-                    'conditions' => ['gone' => 1 ],
-                    'order' => 'id asc',
-                    'contain' => ['ReunionAttends']
-                ]);
+        if (is_numeric($param)) {
+            if ($param == -1) {
+                // 物故者
+                $query->where(['gone' => 1]);
             } else {
-                $results = $this->membersTable->find('all', [
-                    'conditions' => ['class' => $param ],
-                    'order' => 'id asc',
-                    'contain' => ['ReunionAttends']
-                ]);
+                $query->where(['class' => $param]);
             }
         } else {
             // a クラスの時は、出席者
-            if( $param == 'a' ) {
-                $results = $this->membersTable->find('all', [
-                    'conditions' => ['gone' => '0' ],
-                    'order' => 'id asc',
-                    'contain' => ['ReunionAttends']
-                ]);
-    
+            if ($param === 'a') {
+                $query->where(['gone' => '0']);
             } else {
-                $results = $this->membersTable->find('all', [
-                    'conditions' => [ 'OR' =>
-                        [ 'name LIKE' => '%' . $param .'%' , 'yomi LIKE' => '%' . $param .'%' ]
+                $query->where([
+                    'OR' => [
+                        'name LIKE' => '%' . $param . '%',
+                        'yomi LIKE' => '%' . $param . '%',
                     ],
-                    'order' => 'id asc',
-                    'contain' => ['ReunionAttends']
                 ]);
             }
         }
 
-        return $results->toArray();
+        return $query->toArray();
     }
 }
-
-                
-                

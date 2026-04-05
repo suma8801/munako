@@ -105,7 +105,7 @@ class OAuthController extends AppController
     public function callback(?string $provider = null): ?Response
     {
         $this->request->allowMethod(['get', 'post']);
-        $this->viewBuilder()->disableAutoRender();
+        $this->disableAutoRender();
 
         $slug = $this->normalizeProviderSlug($provider);
         if ($slug === null) {
