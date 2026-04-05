@@ -10,6 +10,8 @@ use Cake\Http\Session;
 use Cake\Log\Log;
 use Firebase\JWT\JWT;
 use GNOffice\OAuth2\Client\Provider\Line;
+use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Exception\ClientException as GuzzleClientException;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Provider\AppleResourceOwner;
 use League\OAuth2\Client\Provider\Google;
@@ -187,7 +189,7 @@ class OAuthController extends AppController
             return $this->redirect(['controller' => 'Homes', 'action' => 'index']);
         }
 
-        $email = $this->extractEmail($slug, $owner, $token, $client, $session);
+        $email = $this->extractEmail($slug, $owner, $token, $client, $session, $cfg);
         $displayName = $this->extractDisplayName($slug, $owner);
 
         $usersTable = $this->fetchTable('Users');
@@ -384,7 +386,8 @@ class OAuthController extends AppController
         ResourceOwnerInterface $owner,
         AccessTokenInterface $token,
         object $client,
-        Session $session
+        Session $session,
+        array $providerCfg = []
     ): ?string {
         if ($slug === 'google' && $owner instanceof GoogleUser) {
             $e = $owner->getEmail();
@@ -406,17 +409,47 @@ class OAuthController extends AppController
             $values = $token->getValues();
             $jwt = $values['id_token'] ?? null;
             $nonce = $session->read('OAuth.line.nonce');
-            if (is_string($jwt) && $jwt !== '' && is_string($nonce) && $nonce !== '') {
-                try {
-                    $email = $client->getEmail($jwt, $nonce);
-                    return $email !== null && $email !== '' ? $email : null;
-                } catch (\Throwable) {
-                    return null;
-                }
+            $clientId = trim((string)($providerCfg['clientId'] ?? ''));
+            if (is_string($jwt) && $jwt !== '' && is_string($nonce) && $nonce !== '' && $clientId !== '') {
+                // vendor の Line::getEmail() は email 欠如時に Warning を出すため、自前で検証レスポンスを扱う
+                return $this->lineEmailFromIdTokenVerify($clientId, $jwt, $nonce);
             }
         }
 
         return null;
+    }
+
+    /**
+     * LINE の id_token 検証 API からメールを取得（無い場合は null。Warning を出さない）。
+     */
+    private function lineEmailFromIdTokenVerify(string $clientId, string $jwt, string $nonce): ?string
+    {
+        try {
+            $http = new GuzzleClient();
+            $response = $http->post('https://api.line.me/oauth2/v2.1/verify', [
+                'form_params' => [
+                    'id_token' => $jwt,
+                    'client_id' => $clientId,
+                    'nonce' => $nonce,
+                ],
+            ]);
+        } catch (GuzzleClientException $e) {
+            Log::debug('LINE id_token verify: ' . $e->getMessage());
+
+            return null;
+        } catch (\Throwable $e) {
+            Log::debug('LINE id_token verify: ' . $e->getMessage());
+
+            return null;
+        }
+
+        $data = json_decode((string)$response->getBody(), true);
+        if (!is_array($data)) {
+            return null;
+        }
+        $email = $data['email'] ?? null;
+
+        return is_string($email) && $email !== '' ? $email : null;
     }
 
     private function extractDisplayName(string $slug, ResourceOwnerInterface $owner): string

@@ -71,6 +71,8 @@ class AppController extends Controller
             $this->set('currentUser', $identity->getOriginalData());
         } else {
             $this->viewBuilder()->setLayout('logged_out');
+            // テンプレートの empty($currentUser) を確実に true にする（未設定のままだと環境差で誤判定しうる）
+            $this->set('currentUser', null);
         }
     }
 
