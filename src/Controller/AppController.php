@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use Cake\Controller\Controller;
+use Cake\Core\Configure;
 
 /**
  * Application Controller
@@ -92,5 +93,51 @@ class AppController extends Controller
         }
         $user = $identity->getOriginalData();
         return (int)($user->role_id ?? 0) ?: null;
+    }
+
+    /**
+     * OAuth ログイン・新規登録用（有効かつ最低限の設定が揃ったプロバイダーのみ）
+     *
+     * @return list<array{slug: string, buttonText: string}>
+     */
+    protected function buildOauthLoginProviders(): array
+    {
+        $oauth = Configure::read('OAuth') ?? [];
+        $defs = [
+            ['key' => 'Google', 'slug' => 'google', 'buttonText' => __('Googleでログイン')],
+            ['key' => 'Facebook', 'slug' => 'facebook', 'buttonText' => __('Facebookでログイン')],
+            ['key' => 'X', 'slug' => 'x', 'buttonText' => __('Xでログイン')],
+            ['key' => 'Line', 'slug' => 'line', 'buttonText' => __('LINEでログイン')],
+        ];
+        $out = [];
+        foreach ($defs as $row) {
+            $cfg = $oauth[$row['key']] ?? [];
+            if (empty($cfg['enabled']) || !$this->isOauthProviderConfigured($row['key'], $cfg)) {
+                continue;
+            }
+            $out[] = [
+                'slug' => $row['slug'],
+                'buttonText' => $row['buttonText'],
+            ];
+        }
+
+        return $out;
+    }
+
+    /**
+     * @param array<string, mixed> $cfg
+     */
+    protected function isOauthProviderConfigured(string $configKey, array $cfg): bool
+    {
+        $clientId = trim((string)($cfg['clientId'] ?? ''));
+        $redirectUri = trim((string)($cfg['redirectUri'] ?? ''));
+        if ($clientId === '' || $redirectUri === '') {
+            return false;
+        }
+
+        return match ($configKey) {
+            'Google', 'Facebook', 'X', 'Line' => trim((string)($cfg['clientSecret'] ?? '')) !== '',
+            default => false,
+        };
     }
 }

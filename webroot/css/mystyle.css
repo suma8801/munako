@@ -685,44 +685,6 @@ html {
     margin: 0 0 1rem 0;
 }
 
-.register-user-page .oauth-provider-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 0.65rem;
-    margin-bottom: 0.25rem;
-}
-
-.register-user-page .oauth-provider-btn {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-    width: 100%;
-    gap: 0.75rem;
-    padding: 0.65rem 1rem;
-    font-weight: 600;
-    text-align: left;
-}
-
-.register-user-page .oauth-icon-wrap {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 28px;
-    height: 28px;
-    flex-shrink: 0;
-}
-
-.register-user-page .oauth-icon-svg {
-    width: 22px;
-    height: 22px;
-    display: block;
-}
-
-.register-user-page .oauth-label {
-    flex: 1;
-}
-
 .register-or-divider {
     display: flex;
     align-items: center;
@@ -1530,7 +1492,8 @@ html {
 }
 
 /* ホーム — OAuth ログイン */
-.home-page .oauth-login-block {
+.home-page .oauth-login-block,
+.register-user-page .oauth-login-block {
     margin-top: 2.5rem;
     padding-top: 0.5rem;
     max-width: 480px;
@@ -1572,7 +1535,8 @@ html {
     line-height: 1.5;
 }
 
-.home-page .oauth-button-list {
+.home-page .oauth-button-list,
+.register-user-page .oauth-button-list {
     list-style: none;
     padding: 0;
     margin: 0;
@@ -1582,11 +1546,13 @@ html {
     align-items: stretch;
 }
 
-.home-page .oauth-button-list li {
+.home-page .oauth-button-list li,
+.register-user-page .oauth-button-list li {
     margin: 0;
 }
 
-.home-page .oauth-button {
+.home-page .oauth-button,
+.register-user-page .oauth-button {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1602,32 +1568,37 @@ html {
     border: 1px solid transparent;
 }
 
-.home-page .oauth-button:hover {
+.home-page .oauth-button:hover,
+.register-user-page .oauth-button:hover {
     text-decoration: none;
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
-.home-page .oauth-button:focus-visible {
+.home-page .oauth-button:focus-visible,
+.register-user-page .oauth-button:focus-visible {
     outline: 2px solid #007cba;
     outline-offset: 2px;
 }
 
-.home-page .oauth-button__inner {
+.home-page .oauth-button__inner,
+.register-user-page .oauth-button__inner {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.65rem;
 }
 
-.home-page .oauth-button__icon {
+.home-page .oauth-button__icon,
+.register-user-page .oauth-button__icon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
 }
 
-.home-page .oauth-button__line-mark {
+.home-page .oauth-button__line-mark,
+.register-user-page .oauth-button__line-mark {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -1643,56 +1614,71 @@ html {
     color: #06c755;
 }
 
-.home-page .oauth-button--google {
+.home-page .oauth-button--google,
+.register-user-page .oauth-button--google {
     background: #fff;
     color: #3c4043;
     border-color: #dadce0;
 }
 
-.home-page .oauth-button--google:hover {
+.home-page .oauth-button--google:hover,
+.register-user-page .oauth-button--google:hover {
     background: #f8f9fa;
     color: #3c4043;
 }
 
-.home-page .oauth-button--apple {
+.home-page .oauth-button--x,
+.register-user-page .oauth-button--x {
     background: #000;
     color: #fff;
     border-color: #000;
 }
 
-.home-page .oauth-button--apple:hover {
+.home-page .oauth-button--x:hover,
+.register-user-page .oauth-button--x:hover {
     background: #222;
     color: #fff;
 }
 
-.home-page .oauth-button--apple .oauth-button__icon {
-    color: #fff;
-}
-
-.home-page .oauth-button--x {
-    background: #000;
-    color: #fff;
-    border-color: #000;
-}
-
-.home-page .oauth-button--x:hover {
-    background: #222;
-    color: #fff;
-}
-
-.home-page .oauth-button--line {
+.home-page .oauth-button--line,
+.register-user-page .oauth-button--line {
     background: #06c755;
     color: #fff;
     border-color: #05b34c;
 }
 
-.home-page .oauth-button--line:hover {
+.home-page .oauth-button--line:hover,
+.register-user-page .oauth-button--line:hover {
     background: #05b34c;
     color: #fff;
 }
 
-.home-page .oauth-button--line .oauth-button__line-mark {
+.home-page .oauth-button--line .oauth-button__line-mark,
+.register-user-page .oauth-button--line .oauth-button__line-mark {
     background: rgba(255, 255, 255, 0.95);
+}
+
+.home-page .oauth-button--facebook,
+.register-user-page .oauth-button--facebook {
+    background: #fff;
+    color: #1c1e21;
+    border-color: #ccd0d5;
+}
+
+.home-page .oauth-button--facebook:hover,
+.register-user-page .oauth-button--facebook:hover {
+    background: #f0f2f5;
+    border-color: #bec3c9;
+}
+
+.home-page .oauth-button--facebook .oauth-button__icon,
+.register-user-page .oauth-button--facebook .oauth-button__icon {
+    background: #fff;
+}
+
+.register-user-page .oauth-login-block {
+    margin-top: 0;
+    padding-top: 0;
 }
 
 /* ========================================

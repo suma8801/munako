@@ -2,6 +2,12 @@
 
 **概要**: ホームページの「新規登録」リンクをスタッフ/管理者のみ表示するように変更し、`homes/index`ページでOAuthログインオプションを実装します。
 
+### ステータス（2026-04）
+
+本ドキュメントのスコープは**ほぼ完了**とする。OAuth（Google / Facebook / X / LINE）、ホームおよび `/users/register-user` での連携ボタン、Apple OAuth の削除、`AppController` へのプロバイダー一覧ロジックの集約などは反映済み。
+
+**未了・後日確認**: メールアドレスによるログインおよびメールでの新規登録フローは、別途動作確認する。
+
 ---
 
 ### **手順**
@@ -23,14 +29,12 @@
 1. **OAuthプラグインのインストール**（実施済み）:
    - 基底: [`league/oauth2-client`](https://packagist.org/packages/league/oauth2-client)
    - Google: [`league/oauth2-google`](https://packagist.org/packages/league/oauth2-google)
-   - Apple: [`patrickbussmann/oauth2-apple`](https://packagist.org/packages/patrickbussmann/oauth2-apple)（`League\OAuth2\Client\Provider\Apple`）
    - LINE: [`gn-office/oauth2-line`](https://packagist.org/packages/gn-office/oauth2-line)
    - X（Twitter）: [`aporat/oauth2-xtwitter`](https://packagist.org/packages/aporat/oauth2-xtwitter)
    - Docker 利用時: `docker compose run --rm composer install` で `composer.lock` と同期。
 
 2. **OAuthプロバイダーの設定**:
-   - [config/app_local.example.php](config/app_local.example.php) に `OAuth` キー（Google / Apple / X / LINE）を追加済み。ローカルは [config/app_local.php](config/app_local.php) に同様のブロックを置き、値は環境変数（`OAUTH_*`）で渡す。
-   - Apple は `clientId` に加え `teamId`・`keyFileId`・`keyFilePath`（`.p8` の絶対パス）が必要（Sign in with Apple）。
+   - [config/app_local.example.php](config/app_local.example.php) に `OAuth` キー（Google / Facebook / X / LINE）を追加済み。ローカルは [config/app_local.php](config/app_local.php) に同様のブロックを置き、値は環境変数（`OAUTH_*`）で渡す。
    - 変数名の一覧は `config/.env.example` の OAuth セクション（コメント）を参照。
 
 3. **OAuthコントローラーの作成**:
@@ -39,9 +43,10 @@
      - `login($provider)` → プロバイダーの認証ページにリダイレクト。
      - `callback($provider)` → プロバイダーのレスポンスを処理し、ユーザーを認証。
 
-4. **`homes/index`テンプレートの更新**:
-   - 未認証ユーザー向けに「新規登録」リンクをOAuthログインボタンに置き換え。
-   - プロバイダーのロゴ/アイコンを使用してUXを向上。
+4. **`homes/index` / `users/register-user` テンプレートの更新**:
+   - 未認証ユーザー向けに OAuth ログインボタン（有効なプロバイダのみ）を表示。
+   - 一般ユーザー向け新規登録（`/users/register-user`）でも同じ OAuth リンクを使用。
+   - プロバイダーのロゴ/アイコンは `templates/element/oauth_button_inner.php` を共通化。
 
 5. **OAuthフローのテスト**:
    - 各プロバイダーのログイン機能を検証。
@@ -81,7 +86,7 @@
    - `/users/register`への不正アクセスを試行。
 
 2. **OAuthログイン**:
-   - Google、Apple、X、LINEのログインフローをテスト。
+   - Google、Facebook、X、LINEのログインフローをテスト。
    - ユーザーセッションの作成とリダイレクトを確認。
 
 3. **リグレッションテスト**:
@@ -90,7 +95,7 @@
 ---
 
 ### **決定事項**
-- **OAuthプロバイダー**: ユーザーリクエストに基づき、Google、Apple、X、LINEを選定。
+- **OAuthプロバイダー**: ユーザーリクエストに基づき、Google、Facebook、X、LINEを選定。
 - **ロールベースアクセス**: セキュリティのため、スタッフ/管理者のみ「新規登録」を表示。
 
 ---
@@ -98,7 +103,7 @@
 ### **users テーブル（フェーズ２向けスキーマ）**
 - `docker/mysql/init/01_users.sql` に以下を反映済み。
   - `password` … NULL 許可（OAuth 専用ユーザーはパスワードなし）
-  - `oauth_provider` … `varchar(32)` NULL（例: `google`, `line`, `apple`, `x`）
+  - `oauth_provider` … `varchar(32)` NULL（例: `google`, `facebook`, `line`, `x`）
   - `oauth_subject` … `varchar(255)` NULL（プロバイダー側の一意 ID）
   - 複合 UNIQUE `users_oauth_provider_subject`（`oauth_provider` + `oauth_subject`）
 - CakePHP: `User` エンティティ・`UsersTable`（バリデーション・ルール・`findAuth` 選択列）を同期。

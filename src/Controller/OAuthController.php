@@ -8,22 +8,21 @@ use Cake\Core\Configure;
 use Cake\Http\Response;
 use Cake\Http\Session;
 use Cake\Log\Log;
-use Firebase\JWT\JWT;
 use GNOffice\OAuth2\Client\Provider\Line;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\ClientException as GuzzleClientException;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
-use League\OAuth2\Client\Provider\AppleResourceOwner;
+use League\OAuth2\Client\Provider\Facebook;
+use League\OAuth2\Client\Provider\FacebookUser;
 use League\OAuth2\Client\Provider\Google;
-use League\OAuth2\Client\Provider\Apple;
 use League\OAuth2\Client\Provider\GoogleUser;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use League\OAuth2\Client\Token\AccessTokenInterface;
 
 /**
- * OAuth 2.0 ログイン（Google / Apple / X / LINE）
+ * OAuth 2.0 ログイン（Google / Facebook / X / LINE）
  *
- * URL 例: /oauth/login/google, /oauth/callback/google
+ * URL 例（DashedRoute）: /o-auth/login/google, /o-auth/callback/facebook
  *
  * @property \App\Model\Table\UsersTable $Users
  */
@@ -32,7 +31,7 @@ class OAuthController extends AppController
     /** URL スラッグ => Configure の OAuth キー */
     private const PROVIDER_CONFIG_KEYS = [
         'google' => 'Google',
-        'apple' => 'Apple',
+        'facebook' => 'Facebook',
         'x' => 'X',
         'line' => 'Line',
     ];
@@ -40,7 +39,7 @@ class OAuthController extends AppController
     /** DB の oauth_provider に保存する値 */
     private const PROVIDER_DB_KEYS = [
         'google' => 'google',
-        'apple' => 'apple',
+        'facebook' => 'facebook',
         'x' => 'x',
         'line' => 'line',
     ];
@@ -54,7 +53,7 @@ class OAuthController extends AppController
     /**
      * プロバイダーの認可 URL へリダイレクトする。
      *
-     * @param string|null $provider google|apple|x|line
+     * @param string|null $provider google|facebook|x|line
      */
     public function login(?string $provider = null): ?Response
     {
@@ -96,17 +95,25 @@ class OAuthController extends AppController
             }
         }
 
+        // X (Twitter) OAuth 2.0 は PKCE 必須。コールバックで新規 Provider を作るため code_verifier をセッションに保持する
+        if ($slug === 'x' && $client instanceof XTwitter) {
+            $pkce = $client->getPkceCode();
+            if ($pkce !== null) {
+                $session->write('OAuth.x.pkce', $pkce);
+            }
+        }
+
         return $this->redirect($authUrl);
     }
 
     /**
-     * プロバイダーからのコールバック（Apple は form_post のため POST あり）。
+     * プロバイダーからのコールバック。
      *
-     * @param string|null $provider google|apple|x|line
+     * @param string|null $provider google|facebook|x|line
      */
     public function callback(?string $provider = null): ?Response
     {
-        $this->request->allowMethod(['get', 'post']);
+        $this->request->allowMethod(['get']);
         $this->disableAutoRender();
 
         $slug = $this->normalizeProviderSlug($provider);
@@ -154,20 +161,16 @@ class OAuthController extends AppController
             return $this->redirect(['controller' => 'Homes', 'action' => 'index']);
         }
 
-        if ($slug === 'apple') {
-            JWT::$leeway = 60;
-        }
-
         try {
             $token = $this->exchangeCodeForToken($slug, $client, (string)$code, $session);
         } catch (IdentityProviderException $e) {
             Log::warning('OAuth token: ' . $e->getMessage());
-            $this->clearLineOAuthSession();
+            $this->clearOAuthPkceStores();
             $this->Flash->error('外部サービスとの連携に失敗しました。');
             return $this->redirect(['controller' => 'Homes', 'action' => 'index']);
         } catch (\Throwable $e) {
             Log::error('OAuth token: ' . $e->getMessage(), ['exception' => $e]);
-            $this->clearLineOAuthSession();
+            $this->clearOAuthPkceStores();
             $this->Flash->error('ログインに失敗しました。');
             return $this->redirect(['controller' => 'Homes', 'action' => 'index']);
         }
@@ -176,7 +179,7 @@ class OAuthController extends AppController
             $owner = $client->getResourceOwner($token);
         } catch (\Throwable $e) {
             Log::error('OAuth resource owner: ' . $e->getMessage(), ['exception' => $e]);
-            $this->clearLineOAuthSession();
+            $this->clearOAuthPkceStores();
             $this->Flash->error('ユーザー情報の取得に失敗しました。');
             return $this->redirect(['controller' => 'Homes', 'action' => 'index']);
         }
@@ -184,7 +187,7 @@ class OAuthController extends AppController
         $dbProvider = self::PROVIDER_DB_KEYS[$slug];
         $subject = $this->extractSubject($owner);
         if ($subject === null || $subject === '') {
-            $this->clearLineOAuthSession();
+            $this->clearOAuthPkceStores();
             $this->Flash->error('ユーザー識別子を取得できませんでした。');
             return $this->redirect(['controller' => 'Homes', 'action' => 'index']);
         }
@@ -204,7 +207,7 @@ class OAuthController extends AppController
             if ($email !== null && $email !== '') {
                 $existing = $usersTable->findByEmail($email)->first();
                 if ($existing !== null) {
-                    $this->clearLineOAuthSession();
+                    $this->clearOAuthPkceStores();
                     $this->Flash->error(
                         'このメールアドレスは既に登録されています。メール／パスワードでログインしてください。'
                     );
@@ -230,13 +233,13 @@ class OAuthController extends AppController
             if (!$usersTable->save($user)) {
                 $errors = $user->getErrors();
                 Log::warning('OAuth user save failed', ['errors' => $errors]);
-                $this->clearLineOAuthSession();
+                $this->clearOAuthPkceStores();
                 $this->Flash->error('アカウントの作成に失敗しました。');
                 return $this->redirect(['controller' => 'Homes', 'action' => 'index']);
             }
         }
 
-        $this->clearLineOAuthSession();
+        $this->clearOAuthPkceStores();
 
         $user = $usersTable->get($user->id);
         $this->Authentication->setIdentity($user);
@@ -276,6 +279,13 @@ class OAuthController extends AppController
             }
         }
 
+        if ($slug === 'x' && $client instanceof XTwitter) {
+            $pkce = $session->read('OAuth.x.pkce');
+            if (is_string($pkce) && $pkce !== '') {
+                $client->setPkceCode($pkce);
+            }
+        }
+
         return $client->getAccessToken('authorization_code', $opts);
     }
 
@@ -295,11 +305,31 @@ class OAuthController extends AppController
 
         return match ($slug) {
             'google' => $this->requireSecretAndMakeGoogle($clientId, $clientSecret, $redirectUri),
-            'apple' => $this->makeApple($clientId, $clientSecret, $redirectUri, $cfg),
+            'facebook' => $this->requireSecretAndMakeFacebook($clientId, $clientSecret, $redirectUri, $cfg),
             'x' => $this->requireSecretAndMakeXTwitter($clientId, $clientSecret, $redirectUri),
             'line' => $this->requireSecretAndMakeLine($clientId, $clientSecret, $redirectUri),
             default => throw new \InvalidArgumentException('未対応のプロバイダーです。'),
         };
+    }
+
+    private function requireSecretAndMakeFacebook(string $clientId, string $clientSecret, string $redirectUri, array $cfg): Facebook
+    {
+        if ($clientSecret === '') {
+            throw new \InvalidArgumentException('Facebook の clientSecret が空です。');
+        }
+
+        // league/oauth2-facebook 必須。形式は v 付きセマンティック（例: v21.0）
+        $graphVersion = trim((string)($cfg['graphApiVersion'] ?? 'v21.0'));
+        if ($graphVersion === '') {
+            $graphVersion = 'v21.0';
+        }
+
+        return new Facebook([
+            'clientId' => $clientId,
+            'clientSecret' => $clientSecret,
+            'redirectUri' => $redirectUri,
+            'graphApiVersion' => $graphVersion,
+        ]);
     }
 
     private function requireSecretAndMakeGoogle(string $clientId, string $clientSecret, string $redirectUri): Google
@@ -341,36 +371,6 @@ class OAuthController extends AppController
         ]);
     }
 
-    /**
-     * @param array<string, mixed> $cfg
-     */
-    private function makeApple(string $clientId, string $clientSecret, string $redirectUri, array $cfg): Apple
-    {
-        $teamId = trim((string)($cfg['teamId'] ?? ''));
-        $keyFileId = trim((string)($cfg['keyFileId'] ?? ''));
-        $keyFilePath = trim((string)($cfg['keyFilePath'] ?? ''));
-
-        if ($teamId === '' || $keyFileId === '' || $keyFilePath === '') {
-            throw new \InvalidArgumentException('Apple の teamId / keyFileId / keyFilePath が未設定です。');
-        }
-        if (!is_readable($keyFilePath)) {
-            throw new \InvalidArgumentException('Apple の秘密鍵ファイルを読み込めません。');
-        }
-
-        $options = [
-            'clientId' => $clientId,
-            'teamId' => $teamId,
-            'keyFileId' => $keyFileId,
-            'keyFilePath' => $keyFilePath,
-            'redirectUri' => $redirectUri,
-        ];
-        if ($clientSecret !== '') {
-            $options['clientSecret'] = $clientSecret;
-        }
-
-        return new Apple($options);
-    }
-
     private function extractSubject(ResourceOwnerInterface $owner): ?string
     {
         $id = $owner->getId();
@@ -394,7 +394,7 @@ class OAuthController extends AppController
             return $e !== null && $e !== '' ? $e : null;
         }
 
-        if ($slug === 'apple' && $owner instanceof AppleResourceOwner) {
+        if ($slug === 'facebook' && $owner instanceof FacebookUser) {
             $e = $owner->getEmail();
             return $e !== null && $e !== '' ? $e : null;
         }
@@ -465,12 +465,10 @@ class OAuthController extends AppController
             }
         }
 
-        if ($slug === 'apple' && $owner instanceof AppleResourceOwner) {
-            $first = $owner->getFirstName() ?? '';
-            $last = $owner->getLastName() ?? '';
-            $combined = trim($last . ' ' . $first);
-            if ($combined !== '') {
-                return mb_substr($combined, 0, 255);
+        if ($slug === 'facebook' && $owner instanceof FacebookUser) {
+            $n = $owner->getName();
+            if (is_string($n) && $n !== '') {
+                return mb_substr($n, 0, 255);
             }
             $e = $owner->getEmail();
             if (is_string($e) && str_contains($e, '@')) {
@@ -512,13 +510,17 @@ class OAuthController extends AppController
     {
         $session = $this->request->getSession();
         $session->delete('OAuth.state.' . $slug);
-        $this->clearLineOAuthSession();
+        $this->clearOAuthPkceStores();
     }
 
-    private function clearLineOAuthSession(): void
+    /**
+     * LINE / X でトークン交換に使うセッション上の PKCE・nonce を削除する
+     */
+    private function clearOAuthPkceStores(): void
     {
         $session = $this->request->getSession();
         $session->delete('OAuth.line.nonce');
         $session->delete('OAuth.line.pkce');
+        $session->delete('OAuth.x.pkce');
     }
 }

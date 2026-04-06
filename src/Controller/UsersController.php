@@ -444,6 +444,7 @@ class UsersController extends AppController
             }
         }
 
+        $this->set('oauthLoginProviders', $this->buildOauthLoginProviders());
         $this->set(compact('user'));
         $this->set('title', '新規登録');
     }
