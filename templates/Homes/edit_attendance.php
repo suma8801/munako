@@ -5,7 +5,7 @@
             <p class="page-subtitle"><?= h($class) ?>組 / <?= NEXT_YEAR ?>年度（次回同窓会）</p>
         </div>
         <div class="header-actions">
-            <a href="<?= $this->Url->build(['action' => 'classAttendance', $class]) ?>" class="btn btn-secondary btn-back">一覧に戻る</a>
+            <a href="<?= h($this->Url->build(['action' => 'classAttendance', $class]) . '#member-row-' . (int)$member->id) ?>" class="btn btn-secondary btn-back">一覧に戻る</a>
         </div>
     </div>
 
@@ -61,7 +61,7 @@
                     'type' => 'submit',
                     'class' => 'btn btn-primary btn-save'
                 ]) ?>
-                <a href="<?= $this->Url->build(['action' => 'classAttendance', $class]) ?>" class="btn btn-secondary btn-back">キャンセル</a>
+                <a href="<?= h($this->Url->build(['action' => 'classAttendance', $class]) . '#member-row-' . (int)$member->id) ?>" class="btn btn-secondary btn-back">キャンセル</a>
             </div>
         <?= $this->Form->end() ?>
     </div>

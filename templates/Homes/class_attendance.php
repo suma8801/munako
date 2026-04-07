@@ -40,7 +40,7 @@
                         }
                         $truncatedNote = mb_strlen($currentNote) > 20 ? mb_substr($currentNote, 0, 20) . '...' : $currentNote;
                         ?>
-                        <tr>
+                        <tr id="member-row-<?= (int)$member->id ?>">
                             <td><?= h($member->no) ?></td>
                             <td><?= h($member->name) ?></td>
                             <td><?= h($sexLabel) ?></td>
@@ -197,6 +197,10 @@ $this->start('css');
 
 .attendance-table tbody tr:hover {
     background: #f8f9fa;
+}
+
+.attendance-table tbody tr[id^='member-row-'] {
+    scroll-margin-top: 1rem;
 }
 
 .status-text, .note-text {

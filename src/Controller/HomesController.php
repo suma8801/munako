@@ -11,6 +11,7 @@ use App\Service\AttendanceUpdateService;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Http\Response;
 use Cake\Controller\Component\RequestHandlerComponent;
+use Cake\Routing\Router;
 /*
 */
 /**
@@ -377,7 +378,10 @@ class HomesController extends AppController
         }
 
         $this->Flash->success('出欠状況を更新しました。');
-        return $this->redirect(['action' => 'editAttendance', $class, $memberId]);
+
+        $listUrl = Router::url(['action' => 'classAttendance', $class]);
+
+        return $this->redirect($listUrl . '#member-row-' . $memberId);
     }
 
 }
