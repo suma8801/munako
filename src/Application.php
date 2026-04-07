@@ -117,10 +117,6 @@ class Application extends BaseApplication
                 $csrf->skipCheckCallback(function ($request) {
                     $controller = $request->getParam('controller');
                     $action = $request->getParam('action');
-                    if ($controller === 'OAuth' && $action === 'callback') {
-                        // Apple Sign in 等が form_post で戻るため CSRF トークンなし
-                        return true;
-                    }
                     if ($controller === 'Users' && $action === 'register') {
                         $usersTable = FactoryLocator::get('Table')->get('Users');
                         $hasAdmin = $usersTable->exists(['role_id' => 3]);

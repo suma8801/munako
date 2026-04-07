@@ -5,7 +5,6 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use App\Service\MemberSearchService;
-use Cake\Core\Configure;
 use App\Service\DashboardStatisticsService;
 use App\Service\AttendanceUpdateService;
 use Cake\Http\Exception\NotFoundException;
@@ -55,68 +54,6 @@ class HomesController extends AppController
     {
         // 一般ログインは /users/login-user 、スタッフログインは /users/login-staff へリンクで誘導
         $this->set('oauthLoginProviders', $this->buildOauthLoginProviders());
-    }
-
-    /**
-     * ホームに表示する OAuth ボタン用（有効かつ最低限の設定が揃ったプロバイダーのみ）
-     *
-     * @return list<array{slug: string, buttonText: string}>
-     */
-    protected function buildOauthLoginProviders(): array
-    {
-        $oauth = Configure::read('OAuth') ?? [];
-        $defs = [
-            ['key' => 'Google', 'slug' => 'google', 'buttonText' => __('Googleでログイン')],
-            ['key' => 'Apple', 'slug' => 'apple', 'buttonText' => __('Appleでログイン')],
-            ['key' => 'X', 'slug' => 'x', 'buttonText' => __('Xでログイン')],
-            ['key' => 'Line', 'slug' => 'line', 'buttonText' => __('LINEでログイン')],
-        ];
-        $out = [];
-        foreach ($defs as $row) {
-            $cfg = $oauth[$row['key']] ?? [];
-            if (empty($cfg['enabled']) || !$this->isOauthProviderConfigured($row['key'], $cfg)) {
-                continue;
-            }
-            $out[] = [
-                'slug' => $row['slug'],
-                'buttonText' => $row['buttonText'],
-            ];
-        }
-
-        return $out;
-    }
-
-    /**
-     * @param array<string, mixed> $cfg
-     */
-    protected function isOauthProviderConfigured(string $configKey, array $cfg): bool
-    {
-        $clientId = trim((string)($cfg['clientId'] ?? ''));
-        $redirectUri = trim((string)($cfg['redirectUri'] ?? ''));
-        if ($clientId === '' || $redirectUri === '') {
-            return false;
-        }
-
-        return match ($configKey) {
-            'Google', 'X', 'Line' => trim((string)($cfg['clientSecret'] ?? '')) !== '',
-            'Apple' => $this->isAppleOauthConfigured($cfg),
-            default => false,
-        };
-    }
-
-    /**
-     * @param array<string, mixed> $cfg
-     */
-    protected function isAppleOauthConfigured(array $cfg): bool
-    {
-        $teamId = trim((string)($cfg['teamId'] ?? ''));
-        $keyFileId = trim((string)($cfg['keyFileId'] ?? ''));
-        $keyFilePath = trim((string)($cfg['keyFilePath'] ?? ''));
-        if ($teamId === '' || $keyFileId === '' || $keyFilePath === '') {
-            return false;
-        }
-
-        return is_readable($keyFilePath);
     }
 
     // 一般がログインした時に表示されるページ

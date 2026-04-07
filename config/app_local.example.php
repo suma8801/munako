@@ -21,6 +21,8 @@ return [
         'timezone' => 'Asia/Tokyo',
         'defaultLocale' => env('APP_DEFAULT_LOCALE', 'ja_JP'),
         'defaultTimezone' => env('APP_DEFAULT_TIMEZONE', 'Asia/Tokyo'),
+        // 本番で固定したいとき（リバースプロキシ配下やメール内の絶対URL用）。未設定時はリクエストから自動判定
+        'fullBaseUrl' => env('APP_FULL_BASE_URL') ?: false,
     ],
 
     /*
@@ -98,8 +100,9 @@ return [
     /*
      * OAuth 2.0（フェーズ２）
      *
-     * 認証情報は .env / 環境変数で渡すこと。redirectUri は各プロバイダーの開発者コンソールに登録した URL と一致させる。
-     * 使用パッケージ: league/oauth2-client, league/oauth2-google, patrickbussmann/oauth2-apple,
+     * 認証情報は .env / 環境変数で渡すこと。redirectUri は各プロバイダーのコンソールに登録した URL と完全一致させる。
+     * DashedRoute では OAuthController の URL は /o-auth/callback/{google|facebook|x|line}（/oauth ではない）。
+     * 使用パッケージ: league/oauth2-client, league/oauth2-google, league/oauth2-facebook,
      * gn-office/oauth2-line, aporat/oauth2-xtwitter
      */
     'OAuth' => [
@@ -109,13 +112,12 @@ return [
             'clientSecret' => env('OAUTH_GOOGLE_CLIENT_SECRET', ''),
             'redirectUri' => env('OAUTH_GOOGLE_REDIRECT_URI', ''),
         ],
-        'Apple' => [
-            'enabled' => filter_var(env('OAUTH_APPLE_ENABLED', false), FILTER_VALIDATE_BOOLEAN),
-            'clientId' => env('OAUTH_APPLE_CLIENT_ID', ''),
-            'teamId' => env('OAUTH_APPLE_TEAM_ID', ''),
-            'keyFileId' => env('OAUTH_APPLE_KEY_FILE_ID', ''),
-            'keyFilePath' => env('OAUTH_APPLE_KEY_FILE_PATH', ''),
-            'redirectUri' => env('OAUTH_APPLE_REDIRECT_URI', ''),
+        'Facebook' => [
+            'enabled' => filter_var(env('OAUTH_FACEBOOK_ENABLED', false), FILTER_VALIDATE_BOOLEAN),
+            'clientId' => env('OAUTH_FACEBOOK_CLIENT_ID', ''),
+            'clientSecret' => env('OAUTH_FACEBOOK_CLIENT_SECRET', ''),
+            'redirectUri' => env('OAUTH_FACEBOOK_REDIRECT_URI', ''),
+            'graphApiVersion' => env('OAUTH_FACEBOOK_GRAPH_API_VERSION', 'v21.0'),
         ],
         'X' => [
             'enabled' => filter_var(env('OAUTH_X_ENABLED', false), FILTER_VALIDATE_BOOLEAN),
