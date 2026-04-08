@@ -200,7 +200,7 @@ $this->start('css');
 }
 
 .attendance-table tbody tr[id^='member-row-'] {
-    scroll-margin-top: 1rem;
+    scroll-margin-top: calc(1rem + 10em);
 }
 
 .status-text, .note-text {
