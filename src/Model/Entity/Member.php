@@ -17,6 +17,7 @@ use Cake\ORM\Entity;
  * @property int $sex
  *
  * @property \Cake\ORM\ResultSet<\App\Model\Entity\ReunionAttend>|\App\Model\Entity\ReunionAttend[] $reunion_attends
+ * @property \Cake\ORM\ResultSet<\App\Model\Entity\Log>|\App\Model\Entity\Log[] $logs
  */
 class Member extends Entity
 {
@@ -37,5 +38,6 @@ class Member extends Entity
         'gone' => true,
         'sex' => true,
         'reunion_attends' => true,
+        'logs' => true,
     ];
 }

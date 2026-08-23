@@ -13,6 +13,7 @@ use Authentication\PasswordHasher\DefaultPasswordHasher;
  * Users Model
  *
  * @property \App\Model\Table\RolesTable&\Cake\ORM\Association\BelongsTo $Roles
+ * @property \App\Model\Table\LogsTable&\Cake\ORM\Association\HasMany $Logs
  *
  * @method \App\Model\Entity\User newEmptyEntity()
  * @method \App\Model\Entity\User newEntity(array $data, array $options = [])
@@ -54,6 +55,9 @@ class UsersTable extends Table
         $this->belongsTo('Roles', [
             'foreignKey' => 'role_id',
             'joinType' => 'INNER',
+        ]);
+        $this->hasMany('Logs', [
+            'foreignKey' => 'user_id',
         ]);
     }
 

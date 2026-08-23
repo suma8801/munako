@@ -51,10 +51,33 @@
                     'label' => false,
                     'class' => 'form-control note-textarea',
                     'rows' => 6,
-                    'placeholder' => 'メモを入力してください',
+                    'placeholder' => '既存のメモの末尾に追記してください',
                     'data-original-value' => $currentNote
                 ]) ?>
+                <p class="note-help">追記する場合は、既存メモの末尾に続けて入力してください。末尾に足した内容だけが履歴に残ります。</p>
             </div>
+
+            <?php
+            $noteLogs = $noteLogs ?? [];
+            if ($noteLogs !== []):
+            ?>
+            <div class="note-logs">
+                <h2 class="note-logs-title">追記履歴</h2>
+                <ul class="note-logs-list">
+                    <?php foreach ($noteLogs as $noteLog): ?>
+                        <li class="note-log-item">
+                            <div class="note-log-meta">
+                                <span class="note-log-name"><?= h($noteLog->user_name) ?></span>
+                                <time class="note-log-time" datetime="<?= h($noteLog->created?->i18nFormat("yyyy-MM-dd'T'HH:mm:ss")) ?>">
+                                    <?= h($noteLog->created?->i18nFormat('yyyy/MM/dd HH:mm')) ?>
+                                </time>
+                            </div>
+                            <div class="note-log-body"><?= h($noteLog->body) ?></div>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+            <?php endif; ?>
 
             <div class="form-actions">
                 <?= $this->Form->button('保存', [
@@ -198,6 +221,13 @@ $this->start('css');
     box-sizing: border-box;
 }
 
+.note-help {
+    margin: 0.5rem 0 0 0;
+    color: #6c757d;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
 .form-actions {
     display: flex;
     align-items: center;
@@ -218,6 +248,65 @@ $this->start('css');
     box-sizing: border-box;
     text-align: center;
     font-size: 1rem;
+}
+
+.note-logs {
+    margin: 0 0 2rem 0;
+    padding: 1.25rem 1.25rem 0.5rem;
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+}
+
+.note-logs-title {
+    margin: 0 0 1rem 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.note-logs-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.note-log-item {
+    padding: 0.9rem 0;
+    border-top: 1px solid #e9ecef;
+}
+
+.note-log-item:first-child {
+    border-top: none;
+    padding-top: 0;
+}
+
+.note-log-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.75rem;
+    margin-bottom: 0.4rem;
+}
+
+.note-log-name {
+    font-weight: 600;
+    color: #007cba;
+    font-size: 1rem;
+}
+
+.note-log-time {
+    color: #6c757d;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.note-log-body {
+    color: #333;
+    font-size: 1rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
 }
 
 @media (max-width: 768px) {

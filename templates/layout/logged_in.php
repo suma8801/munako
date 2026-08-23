@@ -39,6 +39,9 @@
                         if ($effectiveRoleId !== null && in_array($effectiveRoleId, [2, 3], true)):
                         ?>
                             <li class="nav-item">
+                                <a href="<?= $this->Url->build(['controller' => 'Homes', 'action' => 'dashboard']) ?>" class="nav-link"><?= __('ダッシュボード') ?></a>
+                            </li>
+                            <li class="nav-item">
                                 <a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'register']) ?>" class="nav-link"><?= __('新規登録') ?></a>
                             </li>
                         <?php endif; ?>
@@ -56,6 +59,7 @@
         </nav>
     </header>
     <main>
+        <?= $this->Flash->render() ?>
         <?= $this->fetch('content') ?>
     </main>
     <footer class="site-footer">
@@ -70,6 +74,7 @@
                     <ul class="footer-links">
                         <li><a href="<?= $this->Url->build(['controller' => 'Homes', 'action' => 'index']) ?>">ホーム</a></li>
                         <?php if ($effectiveRoleId !== null && in_array($effectiveRoleId, [2, 3], true)): ?>
+                            <li><a href="<?= $this->Url->build(['controller' => 'Homes', 'action' => 'dashboard']) ?>"><?= __('ダッシュボード') ?></a></li>
                             <li><a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'register']) ?>"><?= __('新規登録') ?></a></li>
                         <?php endif; ?>
                     </ul>

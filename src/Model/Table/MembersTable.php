@@ -12,6 +12,7 @@ use Cake\Validation\Validator;
  * Members Model
  *
  * @property \App\Model\Table\ReunionAttendsTable&\Cake\ORM\Association\HasMany $ReunionAttends
+ * @property \App\Model\Table\LogsTable&\Cake\ORM\Association\HasMany $Logs
  *
  * @method \App\Model\Entity\Member newEmptyEntity()
  * @method \App\Model\Entity\Member newEntity(array $data, array $options = [])
@@ -44,6 +45,9 @@ class MembersTable extends Table
         $this->setPrimaryKey('id');
 
         $this->hasMany('ReunionAttends', [
+            'foreignKey' => 'member_id',
+        ]);
+        $this->hasMany('Logs', [
             'foreignKey' => 'member_id',
         ]);
     }

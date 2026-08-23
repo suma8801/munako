@@ -22,6 +22,7 @@ use Authentication\PasswordHasher\DefaultPasswordHasher;
  * @property \Cake\I18n\DateTime $created
  *
  * @property \App\Model\Entity\Role $role
+ * @property \App\Model\Entity\Log[] $logs
  */
 class User extends Entity
 {
@@ -45,6 +46,7 @@ class User extends Entity
         'token' => true,
         'token_expire' => true,
         'created' => true,
+        'logs' => true,
     ];
 
     /**

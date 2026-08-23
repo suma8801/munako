@@ -10,7 +10,6 @@ use App\Service\AttendanceUpdateService;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Http\Response;
 use Cake\Controller\Component\RequestHandlerComponent;
-use Cake\Routing\Router;
 /*
 */
 /**
@@ -309,16 +308,18 @@ class HomesController extends AppController
 
         $year = NEXT_YEAR;
         $service = new AttendanceUpdateService();
-        if (!$service->save($memberId, $year, $attendStatusId, $note)) {
+        $identity = $this->request->getAttribute('authentication')?->getIdentity();
+        $currentUser = $identity?->getOriginalData();
+        $userId = isset($currentUser->id) ? (int)$currentUser->id : null;
+        $userName = (string)($currentUser?->name ?? '');
+        if (!$service->save($memberId, $year, $attendStatusId, $note, $userId, $userName)) {
             $this->Flash->error('出欠状況の保存に失敗しました。');
             return $this->redirect(['action' => 'editAttendance', $class, $memberId]);
         }
 
         $this->Flash->success('出欠状況を更新しました。');
 
-        $listUrl = Router::url(['action' => 'classAttendance', $class]);
-
-        return $this->redirect($listUrl . '#member-row-' . $memberId);
+        return $this->redirect(['action' => 'editAttendance', $class, $memberId]);
     }
 
 }
