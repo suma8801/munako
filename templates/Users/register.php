@@ -76,11 +76,3 @@
     
     <?= $this->Form->end() ?>
 </div>
-
-<div class="oauth-options">
-        <h3>または、以下のサービスを使用して登録</h3>
-        <div class="oauth-buttons">
-            <button class="button button-google">Googleで登録</button>
-            <button class="button button-facebook">Facebookで登録</button>
-        </div>
-    </div>
