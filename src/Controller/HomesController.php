@@ -322,4 +322,23 @@ class HomesController extends AppController
         return $this->redirect(['action' => 'editAttendance', $class, $memberId]);
     }
 
+    /**
+     * 連絡先不明の同窓生一覧
+     * ログイン中の全員が閲覧可能
+     */
+    public function unknownContacts()
+    {
+        $currentRoleId = $this->getEffectiveRoleId();
+        if ($currentRoleId === null) {
+            $this->Flash->error('ログインが必要です。');
+            return $this->redirect(['controller' => 'Homes', 'action' => 'index']);
+        }
+
+        $year = NEXT_YEAR;
+        $service = new AttendanceUpdateService();
+        $records = $service->getUnknownContactRecords($year);
+
+        $this->set(compact('year', 'records'));
+    }
+
 }

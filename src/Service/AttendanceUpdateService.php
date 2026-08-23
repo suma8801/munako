@@ -229,4 +229,22 @@ class AttendanceUpdateService
 
         return $appended;
     }
+
+    /**
+     * 次回同窓会で連絡先不明の出欠レコードを取得（クラス・番号順）
+     *
+     * @param int $year 開催年
+     * @return array<\App\Model\Entity\ReunionAttend>
+     */
+    public function getUnknownContactRecords(int $year): array
+    {
+        return $this->reunionAttendsTable->find()
+            ->where([
+                'ReunionAttends.year' => $year,
+                'ReunionAttends.attend_status_id' => AttendStatusesTable::ID_UNKNOWN_CONTACT,
+            ])
+            ->contain(['Members'])
+            ->orderBy(['Members.class' => 'ASC', 'Members.no' => 'ASC'])
+            ->toArray();
+    }
 }

@@ -31,6 +31,9 @@ use Cake\Validation\Validator;
  */
 class AttendStatusesTable extends Table
 {
+    /** 連絡先不明 */
+    public const ID_UNKNOWN_CONTACT = 3;
+
     /**
      * Initialize method
      *

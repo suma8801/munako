@@ -34,6 +34,9 @@
                         <li class="nav-item">
                             <a href="<?= $this->Url->build(['controller' => 'Homes', 'action' => 'index']) ?>" class="nav-link">ホーム</a>
                         </li>
+                        <li class="nav-item">
+                            <a href="<?= $this->Url->build(['controller' => 'Homes', 'action' => 'unknownContacts']) ?>" class="nav-link"><?= __('連絡先不明') ?></a>
+                        </li>
                         <?php
                         $effectiveRoleId = $effectiveRoleId ?? null;
                         if ($effectiveRoleId !== null && in_array($effectiveRoleId, [2, 3], true)):
@@ -73,6 +76,7 @@
                     <h4>リンク</h4>
                     <ul class="footer-links">
                         <li><a href="<?= $this->Url->build(['controller' => 'Homes', 'action' => 'index']) ?>">ホーム</a></li>
+                        <li><a href="<?= $this->Url->build(['controller' => 'Homes', 'action' => 'unknownContacts']) ?>"><?= __('連絡先不明') ?></a></li>
                         <?php if ($effectiveRoleId !== null && in_array($effectiveRoleId, [2, 3], true)): ?>
                             <li><a href="<?= $this->Url->build(['controller' => 'Homes', 'action' => 'dashboard']) ?>"><?= __('ダッシュボード') ?></a></li>
                             <li><a href="<?= $this->Url->build(['controller' => 'Users', 'action' => 'register']) ?>"><?= __('新規登録') ?></a></li>
