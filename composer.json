@@ -15,7 +15,7 @@
         "league/oauth2-client": "^2.9",
         "league/oauth2-facebook": "^2.2",
         "league/oauth2-google": "^5.0",
-        "mobiledetect/mobiledetectlib": "^3.74"
+        "mobiledetect/mobiledetectlib": "^4.11"
     },
     "require-dev": {
         "cakephp/bake": "^3.0.0",
